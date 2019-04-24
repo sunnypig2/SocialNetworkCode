@@ -1,0 +1,126 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns="">
+{% load staticfiles %}
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" href="{% static 'css/main_demo.css' %}">
+<title>天鹰监测系统</title>
+</head>
+<body>
+<div style="width: 1300px;margin: auto;">
+    <header style="background-color: #547ca5;height: 100px;vertical-align: center;">
+        <img src="/static/img/eagle.jpg" height="100px" width="120px">
+        <h2 style="text-align: center;margin-top: -60px;">天鹰监测系统</h2>
+        <span style="position:relative;float: right;bottom: 30px;right: 20px;">
+        <a href="#" style="color: black;" >{{ user.username }}<span class="caret"></span></a>
+        <span ><a href="{% url 'socialNetworkCode:logout' %}" style="color: black;" >Logout</a></span>
+        </span>
+    </header>
+        <br><br>
+
+    <div class="navigate" style="float: left;background-color: #F9FAFB;">
+        <ul class="">
+            <li><a href="{% url 'socialNetworkCode:demo'  1 1 %}" ><b>信息概况监测</b></a></li>
+            <h3 style="text-align: center;">{{ name }}</h3>
+            <li><a href="{% url 'socialNetworkCode:peoplenews'  name  %}" style="background-color:  #ecf5ff" >人物介绍</a></li>
+            <li><a href="{% url 'socialNetworkCode:all_analysis'  name  %}" >人物整体分析</a></li>
+            <li><a href="{% url 'socialNetworkCode:sin_analysis'  name  %}"  >人物单体分析</a></li>
+        </ul>
+    </div>
+    <div class="content" style="float: left;margin-left: 20px;">
+        <div class="basic_info">
+            <h3 style="background-color: rgb(224, 224, 224);padding: 10px 30px;width: 1000px;">基本信息</h3>
+                <h3 >{{ name }}<img src="{% static user.photo %}" height="60px" width="100px" style="float: left;"></h3>
+            <br><br><b>标签：</b>
+                {% for label in labels  %}<span style="border: 1px solid #4183C4;margin-left:30px;padding: 2px 20px;border-radius: 8px;">{{ label.label }}</span>{% endfor %}
+                <p style="width: 1000px;margin-left: 20px;">{{ user.introduction|safe}}</p></div>
+            <h3 style="background-color: rgb(224, 224, 224);padding: 10px 30px;">生平经历</h3>
+                <table class="table" style="width:900px;margin-left: 50px">
+                <thead><tr><th >日期</th>
+                <th >经历</th></tr></thead>
+                <tbody>
+                {% for message in lives %}
+                <tr><td >{{ message.time }}</td>
+                <td>{{ message.introduction }}</td></tr>
+                {% endfor %}
+                </tbody>
+                </table>
+            <h3 style="background-color: rgb(224, 224, 224);padding: 10px 30px;">人物言论</h3>
+                <table class="table" style="width: 900px;margin-left: 50px">
+                <thead>
+                <tr><th >时间</th>
+                <th >主要言论</th>
+                <th >言论来源</th>
+                </tr></thead>
+                <tbody>
+                {% for message in words %}
+                <tr>
+                <td >{{ message.time }}</td>
+                <td>{{ message.userspeech }}</td>
+                <td>{{ message.speechsource }}</td>
+                </tr>
+                {% endfor %}
+                </tbody>
+                </table>
+            <br><br>
+
+</div>
+  </div>
+
+
+</body>
+<script type="text/javascript" src="{% static 'js/jquery-2.1.0.js' %}"></script>
+<script src="{% static 'js/echarts.js' %}"></script>
+
+<script type="text/javascript">
+        // 基于准备好的dom，初始化echarts实例
+        var myChart = echarts.init(document.getElementById('main'));
+
+        // 指定图表的配置项和数据
+        var option = {
+            title: {
+                text: '人物活动趋势'
+            },
+            tooltip: {
+				trigger:'axis'
+				},
+            legend: {
+                data:['活动趋势']
+            },
+			toolbox: {
+        		show : true,
+        		feature : {
+           			mark : {show: true},
+            		dataView : {show: true, readOnly: false},
+            		magicType : {show: true, type: ['line', 'bar']},
+            		restore : {show: true},
+            		saveAsImage : {show: true}
+        		}
+    		},
+			calculable:true,
+            xAxis: {
+				type:'category',
+				boundaryGap:false,
+                data: ['2018-1-1','2018-1-2','2018-1-3','2018-1-4','2018-1-5','2018-1-6','2018-1-7','2018-1-8']
+            },
+            yAxis: {
+				type:'value'
+				},
+            series: [{
+                name: '影响指数',
+                type: 'line',
+                data: [100,200,300,266,400,190,875,766],
+				markPoint:{
+					data:[
+						{type:'max',name:'最大值'},
+						{type:'min',name:'最小值'}
+					]
+					}
+            },
+			]
+        };
+
+        // 使用刚指定的配置项和数据显示图表。
+        myChart.setOption(option);
+    </script>
+
+</html>

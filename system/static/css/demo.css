@@ -1,0 +1,14 @@
+    a { color:#4183C4;text-decoration: none; }
+    ul {    list-style-type: none;}
+    li {float: left}
+    li a {font-size:16px; color:white;display: inline-block;padding: 20px 16px; }
+    /*a:link {color: black; text-decoration:none;} !*未访问：蓝色、无下划线*!*/
+   /*li a:active {color: red; } !*激活：红色*!*/
+    /*a:visited {color:purple;text-decoration:none;}  !*已访问：紫色、无下划线*!*/
+    li a:hover {color: yellow; text-decoration:underline;background-color: #4c4f52;} /*鼠标移近：红色、下划线*/
+    table.table { margin: 10px auto;text-align: center;border-collapse: collapse;border: 3px solid rgba(34, 36, 38, 0.15);background-color: #F9FAFB;}
+    table.table th{ padding: 20px 40px;background-color: #F9FAFB;}
+    /*table.table tr:nth-child(odd) {background-color: #ffffff;}*/
+    /*table.table tr:nth-child(even) {background-color: #F9FAFB;}*/
+    table.table td {padding: 10px 20px;border-top: 8px double rgba(34, 36, 38, 0.15);}
+     .page { text-align: center;}

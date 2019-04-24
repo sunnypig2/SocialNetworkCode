@@ -1,0 +1,27 @@
+<!DOCTYPE html >
+{% load staticfiles %}
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>登录</title>
+    <link rel="stylesheet" href="{% static 'css/mobi.css' %}">
+</head>
+<body>
+<!-- html中的登录表单-->
+<div style="position: absolute;left: 40%;top: 25%;width:300px;height:350px;">
+    <div style="text-align: center;"><img src="{%  static  'img/eagle.jpg' %} " style="width: 150px;"></div>
+<form   method="post" action="{% url 'socialNetworkCode:login' %}">
+    {% csrf_token %}
+{#    <div style="margin-left: 40%;margin-top: 15%">#}
+    <h4  style="text-align: center;">天鹰监测系统</h4>
+    <input name="username"  placeholder="账户名"  autocomplete="off" style="margin-top: 30px;width: 300px;height: 35px;border-radius:3px;outline: 0;border-width: 1px;"><br>
+    <input name="password" type="password"  placeholder="账户密码"  style="margin-top: 10px;width: 300px;height: 35px;border-radius:3px;outline: 0;border-width: 1px;">
+
+    <button class="btn btn-lg btn-primary btn-block" type="submit" style="width: 300px;">登录</button>
+    <span style="color: red" >{{ login_err }}</span>
+{#    </div>#}
+</form>
+</div>
+</body>
+</html>

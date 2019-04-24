@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load staticfiles %}
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" href="{% static 'css/main_demo.css' %}">
+<title>天鹰监测系统</title>
+</head>
+<body>
+<div style="width: 1300px;margin: auto;">
+    <header style="background-color: #547ca5;height: 100px;vertical-align: center;">
+        <img src="/static/img/eagle.jpg" height="100px" width="120px">
+        <h2 style="text-align: center;margin-top: -60px;">天鹰监测系统</h2>
+        <span style="position:relative;float: right;bottom: 30px;right: 20px;">
+        <a href="#" style="color: black;" >{{ user.username }}<span class="caret"></span></a>
+        <span ><a href="{% url 'socialNetworkCode:logout' %}" style="color: black;" >Logout</a></span>
+        </span>
+    </header>
+        <br><br>
+    <div class="navigate" style="float: left;background-color: #F9FAFB;">
+        <ul class="">
+            <li><a href="{% url 'socialNetworkCode:demo'  1 1 %}" ><b>信息概况监测</b></a></li>
+            <h3 style="text-align: center;">{{ name }}</h3>
+            <li><a href="{% url 'socialNetworkCode:peoplenews'  name  %}"  >人物介绍</a></li>
+            <li><a href="{% url 'socialNetworkCode:all_analysis'  name  %}" >人物整体分析</a></li>
+            <li><a href="{% url 'socialNetworkCode:sin_analysis'  name  %}" >人物单体分析</a></li>
+            <li><a href="{% url 'socialNetworkCode:gn'  name  %}">社区划分</a></li>
+            <li><a href="{% url 'socialNetworkCode:recommendation'  name  %}" style="background-color:  #ecf5ff">用户推荐</a></li>
+
+        </ul>
+    </div>
+    <div class="content" style="float: left;margin-left: 20px;">
+        <br><br>
+        <h3 style="background-color: rgb(224, 224, 224);padding: 10px 30px;width: 1000px;">相似人物推荐</h3>
+{#            <div id="main1" style="width: 600px;height:400px;margin: auto;"></div>#}
+        <table class="table"  style="width: 900px;margin-left: 50px">
+            <thead>
+                <tr><th >相似人物</th><th>相似标签</th></tr>
+            </thead>
+                <tbody>
+                    {% for info in sim_people%}
+
+{#                    {% for  %}#}
+
+{#                    {% console.log(sim_people) %}#}
+                    <tr>
+                        {% for i in info %}
+                            <td>{{ i }}</td>
+                        {% endfor %}
+
+                    </tr>
+                    {% endfor %}
+
+                </tbody>
+        </table>
+
+
+    </div>
+</div>
+</body>
+<script type="text/javascript">
+    window.onload = function(){
+        console.log( sim_people )
+    }
+</script>
+</html>

@@ -1,0 +1,292 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns="">
+{% load staticfiles %}
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" href="{% static 'css/main_demo.css' %}">
+<title>天鹰监测系统</title>
+</head>
+<body>
+<div style="width: 1300px;margin: auto;">
+    <header style="background-color: #547ca5;height: 100px;vertical-align: center;">
+        <img src="/static/img/eagle.jpg" height="100px" width="120px">
+        <h2 style="text-align: center;margin-top: -60px;">天鹰监测系统</h2>
+        <span style="position:relative;float: right;bottom: 30px;right: 20px;">
+        <a href="#" style="color: black;" >{{ user.username }}<span class="caret"></span></a>
+        <span ><a href="{% url 'socialNetworkCode:logout' %}" style="color: black;" >Logout</a></span>
+        </span>
+    </header>
+        <br><br>
+    <div class="navigate" style="float: left;background-color: #F9FAFB;">
+        <ul class="">
+            <li><a href="{% url 'socialNetworkCode:demo'  1 1 %}" ><b>信息概况监测</b></a></li>
+            <h3 style="text-align: center;">{{ name }}</h3>
+            <li><a href="{% url 'socialNetworkCode:sin_analysis'  name  %}" style="background-color:  #ecf5ff">人物对比</a></li>
+        </ul>
+    </div>
+    <div class="content" style="float: left;margin-left: 20px;">
+        <div style="width: 450px;display: inline-block;border-right: solid gray 1px; ">
+             <h3 >{{ person.name }}<img src="{% static person.photo %}" height="60px" width="100px" style="float: left;"></h3>
+            <br><br><b>标签：</b>
+            {% for label in person_labels  %}<span style="border: 1px solid #4183C4;margin-left:30px;padding: 2px 20px;border-radius: 8px;">{{ label.label }}</span>{% endfor %}
+            <p style="width: 450px;height: 249px;">{{ person.introduction|safe}}</p>
+        <h3 style="background-color: rgb(224, 224, 224);padding: 10px 30px;">参与事件</h3>
+            <div style="height: 249px">
+            <table class="table"  style="width: 400px;">
+            <thead>
+            <tr><th >参与事件</th>
+                </tr></thead>
+                <tbody>
+                {% for info in person_events %}
+            <tr>
+                <td><a href="{% url 'socialNetworkCode:person_event' info.event name %}">{{ info.event }}</a></td>
+            </tr>
+            {% endfor %}
+            </tbody>
+            </table>
+            </div>
+        <h3 style="background-color: rgb(224, 224, 224);padding: 10px 30px;">言论词云</h3>
+            <div id="main1" style="height:400px; width:450px;"></div>
+
+        </div>
+
+        <div style="width: 450px;display: inline-block;margin-left: 20px;vertical-align: top;">
+             <h3 >{{ contrast.name }}<img src="{% static contrast.photo %}" height="60px" width="100px" style="float: left;"></h3>
+            <button class="addbutton" style="margin: -6px 100px;color:white;background-color:blue;width: 70px;height: 30px;border: 0;">添加人物</button>
+            <br><br><b>标签：</b>
+            {% for label in contrast_labels  %}<span style="border: 1px solid #4183C4;margin-left:30px;padding: 2px 20px;border-radius: 8px;">{{ label.label }}</span>{% endfor %}
+            <p style="width: 450px;margin-left: 20px;height: 249px;">{{ contrast.introduction|safe}}</p>
+        <h3 style="background-color: rgb(224, 224, 224);padding: 10px 30px;">参与事件</h3>
+            <div style="height:249px;">
+            <table class="table"  style="width: 400px;">
+            <thead>
+            <tr><th >参与事件</th>
+                </tr></thead>
+                <tbody>
+                {% for info in contrast_events %}
+            <tr>
+                <td><a href="{% url 'socialNetworkCode:person_event' info.event name %}">{{ info.event }}</a></td>
+            </tr>
+            {% endfor %}
+            </tbody>
+            </table>
+            </div>
+        <h3 style="background-color: rgb(224, 224, 224);padding: 10px 30px;">言论词云</h3>
+            <div id="main2" style="height:400px; width:450px;"></div>
+
+        </div>
+
+        <div >
+        <h3 style="background-color: rgb(224, 224, 224);padding: 10px 30px;">同时出现</h3>
+            两人同时出现55次。
+            <div id="main3" style="height:500px; width:700px;margin: auto;"></div>
+        <h3 style="background-color: rgb(224, 224, 224);padding: 10px 30px;">两人分析</h3>
+            <b>{{ person.name }}和{{ contrast.name }}相似度为90%，是同一类人，具有港独，反共倾向。</b><br><br><br>
+        </div>
+    </div>
+</div>
+</body>
+<script src="{% static 'js/echarts.js' %}"></script>
+<script src="{% static 'js/jquery-2.1.0.js' %}"></script>
+<script src="{% static 'js/echarts-wordcloud.js' %}"></script>
+<script>
+     $(document).ready(function () {
+         $(".addbutton").click(function () {
+            $.ajax({
+            //几个参数需要注意一下
+                type: "POST",//方法类型
+                dataType: "json",//预期服务器返回的数据类型
+                url: "{% url 'socialNetworkCode:person_contrast' name contrast.name %}?name="+"{{ contrast.name }}"//url
+         });
+     })})
+</script>
+<script>
+    var myChart = echarts.init(document.getElementById('main1'));
+option = {
+    title:{
+        text:"词云图",
+        x:'center',
+    },
+    tooltip: {},
+    series: [{
+        type: 'wordCloud',
+        gridSize: 20,
+        sizeRange: [12, 50],
+        rotationRange: [0, 0],
+        shape: 'circle',
+        textStyle: {
+            normal: {
+                color: function() {
+                    return 'rgb(' + [
+                        Math.round(Math.random() * 160),
+                        Math.round(Math.random() * 160),
+                        Math.round(Math.random() * 160)
+                    ].join(',') + ')';
+                }
+            },
+            emphasis: {
+                shadowBlur: 10,
+                shadowColor: '#333'
+            }
+        },
+        data: [{
+            {#name: 'Sam S Club',#}
+            value: 10000,
+            textStyle: {
+                normal: {
+                    color: 'black'
+                },
+                emphasis: {
+                    color: 'red'
+                }
+            }
+        }, {
+            name: '自觉',
+            value: 6181
+        }, {
+            name: '独立',
+            value: 4386
+        }, {
+            name: '立法会补选',
+            value: 4055
+        }, {
+            name: '香港独立',
+            value: 2467
+        }, {
+            name: '和平占中',
+            value: 2244
+        }, {
+            name: '雨伞运动',
+            value: 1898
+        }, {
+            name: '言论自由',
+            value: 1484
+        }, {
+            name: '民主',
+            value: 1112
+        }, {
+            name: '选举',
+            value: 965
+        }, {
+            name: '香港',
+            value: 847
+        }, {
+            name: '缴械军队',
+            value: 555
+        }]
+    }]
+};
+ myChart.setOption(option);
+</script>
+<script>
+ var myChart = echarts.init(document.getElementById('main2'));
+option = {
+    title:{
+        text:"词云图",
+        x:'center',
+    },
+    tooltip: {},
+    series: [{
+        type: 'wordCloud',
+        gridSize: 20,
+        sizeRange: [12, 50],
+        rotationRange: [0, 0],
+        shape: 'circle',
+        textStyle: {
+            normal: {
+                color: function() {
+                    return 'rgb(' + [
+                        Math.round(Math.random() * 160),
+                        Math.round(Math.random() * 160),
+                        Math.round(Math.random() * 160)
+                    ].join(',') + ')';
+                }
+            },
+            emphasis: {
+                shadowBlur: 10,
+                shadowColor: '#333'
+            }
+        },
+        data: [{
+            {#name: 'Sam S Club',#}
+            value: 10000,
+            textStyle: {
+                normal: {
+                    color: 'black'
+                },
+                emphasis: {
+                    color: 'red'
+                }
+            }
+        }, {
+            name: '自我发声',
+            value: 3181
+        }, {
+            name: '民主自决',
+            value: 7386
+        }, {
+            name: '立法会补选',
+            value: 5055
+        }, {
+            name: '香港独立',
+            value: 2467
+        }, {
+            name: '和平占中',
+            value: 2244
+        }, {
+            name: '雨伞运动',
+            value: 1898
+        }, {
+            name: '言论自由',
+            value: 1484
+        }, {
+            name: '自由选举',
+            value: 965
+        }, {
+            name: '香港自主',
+            value: 3847
+        }]
+    }]
+};
+ myChart.setOption(option);
+</script>
+<script>
+    var myChart = echarts.init(document.getElementById('main3'));
+option = {
+    title : {
+        text: '图片、视频、文本所占比例',
+        {#subtext: '纯属虚构',#}
+        x:'center'
+    },
+    tooltip : {
+        trigger: 'item',
+        formatter: "{a} <br/>{b} : {c} ({d}%)"
+    },
+    legend: {
+        orient: 'vertical',
+        left: 'left',
+        data: ['视频','图片','文本']
+    },
+    series : [
+        {
+            name: '访问来源',
+            type: 'pie',
+            radius : '55%',
+            center: ['50%', '60%'],
+            data:[
+                {value:10, name:'视频'},
+                {value:22, name:'图片'},
+                {value:23, name:'文本'},
+            ],
+            itemStyle: {
+                emphasis: {
+                    shadowBlur: 10,
+                    shadowOffsetX: 0,
+                    shadowColor: 'rgba(0, 0, 0, 0.5)'
+                }
+            }
+        }
+    ]
+};
+ myChart.setOption(option);
+</script>
+</html>

@@ -1,0 +1,123 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns="">
+{% load staticfiles %}
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" href="{% static 'css/main_demo.css' %}">
+<title>天鹰监测系统</title>
+</head>
+<body>
+<div style="width: 1300px;margin: auto;">
+    <header style="background-color: #547ca5;height: 100px;vertical-align: center;">
+        <img src="/static/img/eagle.jpg" height="100px" width="120px">
+        <h2 style="text-align: center;margin-top: -60px;">天鹰监测系统</h2>
+        <span style="position:relative;float: right;bottom: 30px;right: 20px;">
+        <a href="#" style="color: black;" >{{ user.username }}<span class="caret"></span></a>
+        <span ><a href="{% url 'socialNetworkCode:logout' %}" style="color: black;" >Logout</a></span>
+        </span>
+    </header>
+        <br><br>
+    <div class="navigate" style="float: left;background-color: #F9FAFB;">
+        <ul class="">
+            <li><a href="{% url 'socialNetworkCode:demo'  1 1 %}" ><b>信息概况监测</b></a></li>
+            <h3 style="text-align: center;">{{ name }}</h3>
+            <li><a href="{% url 'socialNetworkCode:peoplenews'  name  %}"  >人物介绍</a></li>
+            <li><a href="{% url 'socialNetworkCode:all_analysis'  name  %}" >人物整体分析</a></li>
+            <li><a href="{% url 'socialNetworkCode:sin_analysis'  name  %}" style="background-color:  #ecf5ff">人物单体分析</a></li>
+        </ul>
+    </div>
+    <div class="content" style="float: left;margin-left: 20px;">
+        <h3 >{{ name }}<img src="{% static user.photo %}" height="60px" width="100px" style="float: left;"></h3>
+            <form>
+                <br><br><b>标签：</b>
+                {% for label in labels  %}
+                    <input class="label" type="submit" name="name" value="{{ label.label }}" style="border: 1px solid #4183C4;margin-left:30px;padding: 2px 20px;background-color:white;border-radius: 8px;color: #4183C4;/">
+                {% endfor %}
+            </form>
+        <h3 style="background-color: rgb(224, 224, 224);padding: 10px 30px;width: 1000px;">{{ name }}的相似人物</h3>
+            <table class="table"  style="width: 900px;margin-left: 50px">
+            <thead>
+            <tr><th >相似人物</th>
+                <th>相似度</th>
+                </tr></thead>
+                <tbody>
+                {% for info in sim_people %}
+                <tr>
+            <td><a href="{% url 'socialNetworkCode:person_contrast' name info.similar_person %}">{{ info.similar_person }}</a></td>
+                    <td>{{ info.similarity }}</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+            </table>
+        <h3 style="background-color: rgb(224, 224, 224);padding: 10px 30px;width: 1000px;">相关事件</h3>
+            <table class="table"  style="width: 900px;margin-left: 50px">
+            <thead>
+            <tr><th >事件</th>
+                <th>推文数量</th>
+                <th>开始时间</th>
+                <th>热度</th>
+                </tr></thead>
+                <tbody>
+                {% for info in events %}
+            <tr>
+                <td><a href="{% url 'socialNetworkCode:person_event' info.sensitivevent name %}">{{ info.sensitivevent }}</a></td>
+                <td>{{ info.tweetsnum }}</td>
+                <td>{{ info.date }}</td>
+                <td>{{ info.hot }}</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+            </table>
+        <h3 style="background-color: rgb(224, 224, 224);padding: 10px 30px;width: 1000px;">重点推文</h3>
+            <table class="table"  style="width: 900px;margin-left: 50px">
+            <thead>
+            <tr><th >推文</th>
+                <th>关键词</th>
+                <th>时间</th>
+                <th>警告度</th>
+                </tr></thead>
+                <tbody>
+                {% for info in tweets %}
+            <tr>
+                <td><a href="{% url 'socialNetworkCode:person_tweet' info.idtweets  name %}">{{ info.tweets }}</a></td>
+                <td>{{ info.keywords }}</td>
+                <td>{{ info.time }}</td>
+                <td>{{ info.warning }}</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+            </table>
+    </div>
+</div>
+
+</body>
+<script src="{% static 'js/echarts.js' %}"></script>
+<script src="{% static 'js/jquery-2.1.0.js' %}"></script>
+{#<script>#}
+{#    $(document).ready(function () {#}
+{#    $(".label").click(function () {#}
+{#        $(this).css("background-color", "black").siblings().css("background-color","white");#}
+{#        var label = $(this).text();#}
+{#        console.log(label);#}
+{#        $.ajax({#}
+{#            //几个参数需要注意一下#}
+{#                type: "POST",//方法类型#}
+{#                dataType: "json",//预期服务器返回的数据类型#}
+{#                url: "{% url 'socialNetworkCode:sin_analysis' name %}?label="+label//url#}
+{#         });#}
+{#    })})#}
+{#</script>#}
+{#为什么ajax不能返回html，感觉好奇怪啊。后台都能处理，就是不能显示html网页。#}
+<script>
+ $(document).ready(function () {
+     var label = $('input').siblings();console.log(label);
+     for (var i=0;i<label.length;i++){
+        var x = input[i].value;
+
+        if (x ==={{ label }}){
+            $(this).css("background-color", "black").siblings().css("background-color","white");
+        }
+     }
+ })
+ 
+</script>
+</html>

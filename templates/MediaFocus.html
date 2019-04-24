@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load staticfiles %}
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" href="{% static 'css/main_demo.css' %}">
+<title>天鹰监测系统</title>
+</head>
+<body>
+<div style="width: 1300px;margin: auto;">
+    <header style="background-color: #547ca5;height: 100px;vertical-align: center;">
+        <img src="/static/img/eagle.jpg" height="100px" width="120px">
+        <h2 style="text-align: center;margin-top: -60px;">天鹰监测系统</h2>
+        <span style="position:relative;float: right;bottom: 30px;right: 20px;">
+        <a href="#" style="color: black;" >{{ user.username }}<span class="caret"></span></a>
+        <span ><a href="{% url 'socialNetworkCode:logout' %}" style="color: black;" >Logout</a></span>
+        </span>
+    </header>
+        <br><br>
+    <div class="navigate" style="float: left;background-color: #F9FAFB;">
+        <ul class="">
+            <li><a href="{% url 'socialNetworkCode:demo'  1 1 %}" ><b>信息概况监测</b></a></li>
+            <h3 style="text-align: center;">{{ name }}</h3>
+            <li><a href="{% url 'socialNetworkCode:all_analysis'  name  %}" style="background-color:  #ecf5ff">社交账户</a></li>
+        </ul>
+    </div>
+    <div class="content" style="float: left;margin-left: 20px;">
+        <h1>媒体：{{ account.media }}</h1>
+        <h3>账号：{{ account.username }}</h3>
+        <h3 style="background-color: rgb(224, 224, 224);padding: 10px 30px;width: 1000px;">账号基本信息</h3>
+            <table class="table" style="width: 900px;">
+              <thead>
+                <tr><th >用户头像</th>
+                    <th >用户名</th>
+                    <th>创建时间</th>
+                    <th>关注人数</th>
+                    <th>被关注人数</th>
+                    <th>推文数量</th>
+              </tr></thead>
+              <tbody>
+                <tr>
+                  <td><img src="{% static  account.headportrait %} " height="40px" width="60px" ></td>
+                  <td >{{ account.username }}</td>
+                  <td>{{ account.createtime }}</td>
+                  <td>{{ account.follownumber }}</td>
+                  <td>{{ account.fansnumber }}</td>
+                  <td>{{ account.tweetsnumber }}</td>
+                </tr>
+              </tbody>
+                </table>
+        <h3 style="background-color: rgb(224, 224, 224);padding: 10px 30px;width: 1000px;">推文</h3>
+            <table class="table" style="width: 900px;">
+              <thead>
+                <tr><th >发文</th>
+                    <th >关键词</th>
+                    <th >内容模式</th>
+                    <th >时间</th>
+              </tr></thead>
+                <tbody>
+                    {% for message in tweet %}
+                <tr>
+                    <td ><a href="#">{{ message.tweets }}</a></td>
+                  <td>{{ message.keywords|safe }}</td>
+                  <td>{{ message.contextrange }}</td>
+                  <td>{{ message.time }}</td>
+                </tr>
+                    {% endfor %}
+              </tbody>
+                </table>
+        <h3 style="background-color: rgb(224, 224, 224);padding: 10px 30px;width: 1000px;">推文内容比例</h3>
+            <div id="main" style="height:400px;width:500px;margin:auto;"></div>
+
+    </div>
+</div>
+</body>
+<script src="{% static 'js/echarts.js' %}"></script>
+<script src="{% static 'js/jquery-2.1.0.js' %}"></script>
+<script type="text/javascript">
+        // 基于准备好的dom，初始化echarts实例
+        var myChart = echarts.init(document.getElementById('main'));
+
+        // 指定图表的配置项和数据
+        var option = {
+            title: {
+                text: '图片、视频、文本所占比例',
+                x: 'center'
+            },
+            tooltip: {
+                trigger: 'item',
+                formatter: "{a} <br/>{b} : {c} ({d}%)"
+            },
+            legend: {
+                orient: 'vertical',
+                x: 'left',
+                data: ['图片', '视频', '文本']
+            },
+            toolbox: {
+                show: true,
+                feature: {
+                    mark: {show: true},
+                    dataView: {show: true, readOnly: false},
+                    magicType: {
+                        show: true,
+                        type: ['pie', 'funnel'],
+                        option: {
+                            funnel: {
+                                x: '25%',
+                                width: '50%',
+                                funnelAlign: 'left',
+                                max: 1548
+                            }
+                        }
+                    },
+                    restore: {show: true},
+                    saveAsImage: {show: true}
+                }
+            },
+            calculable: true,
+            series: [{
+                name: '数量比例',
+                type: 'pie',
+                radius: "55%",
+                center: ["50%", "60%"],
+                data: [
+                    {value: 335, name: '图片'},
+                    {value: 100, name: '文本'},
+                    {value: 400, name: '视频'}
+                ]
+            }
+            ]
+        };
+        // 使用刚指定的配置项和数据显示图表。
+        myChart.setOption(option);
+
+    </script>
+</html>

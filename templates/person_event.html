@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load staticfiles %}
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" href="{% static 'css/main_demo.css' %}">
+<title>天鹰监测系统</title>
+</head>
+<body>
+<div style="width: 1300px;margin: auto;">
+    <header style="background-color: #547ca5;height: 100px;vertical-align: center;">
+        <img src="/static/img/eagle.jpg" height="100px" width="120px">
+        <h2 style="text-align: center;margin-top: -60px;">天鹰监测系统</h2>
+        <span style="position:relative;float: right;bottom: 30px;right: 20px;">
+        <a href="#" style="color: black;" >{{ user.username }}<span class="caret"></span></a>
+        <span ><a href="{% url 'socialNetworkCode:logout' %}" style="color: black;" >Logout</a></span>
+        </span>
+    </header>
+        <br><br>
+    <div class="navigate" style="float: left;background-color: #F9FAFB;">
+        <ul class="">
+            <li><a href="{% url 'socialNetworkCode:demo'  1 1 %}" ><b>信息概况监测</b></a></li>
+            <h3 style="text-align: center;">{{ name }}</h3>
+            <li><a href="" style="background-color:  #ecf5ff">人物事件监测</a></li>
+        </ul>
+    </div>
+    <div class="content" style="float: left;margin-left: 20px;">
+        <h3 >{{ event_info.sensitivevent }}</h3>
+           <div><b>标签：</b>
+                <span style="border: 1px solid #4183C4;margin-left:30px;padding: 2px 20px;border-radius: 8px;">港独</span>
+            <p>敏感词：<span >{{ event_info.sensitivewords|safe }}</span></p><p>时间：{{ event_info.date }}<br>
+                回应数：{{ event_info.respondnumber }}&nbsp&nbsp &nbsp &nbsp评论数：{{ event_info.commentnumber }}</p>
+            <p style="width: 1000px;">{{ event_info.content|safe }}</p>
+            </div>
+        <h3 style="background-color: rgb(224, 224, 224);padding: 10px 30px;width: 1000px;">热度趋势</h3>
+            <div id="main1" style="height:400px;width:600px;margin: auto;"></div>
+        <h3 style="background-color: rgb(224, 224, 224);padding: 10px 30px;width: 1000px;">响应的人</h3>
+            <div id="main2" style="height:400px;width:500px;margin: auto;"></div>
+        <h3 style="background-color: rgb(224, 224, 224);padding: 10px 30px;width: 1000px;">评论情绪</h3>
+            <div id="main3" style="height:400px;width:500px;margin: auto;"></div>
+        <h3 style="background-color: rgb(224, 224, 224);padding: 10px 30px;width: 1000px;">评论敏感词</h3>
+            <table class="table"  style="width: 900px;margin-left: 50px">
+              <thead>
+                <tr><th >用户</th>
+                    <th >评论敏感词</th>
+              </tr></thead>
+              <tbody>
+                {% for eventword in eventwords %}
+                <tr>
+                  <td >{{ eventword.user }}</td>
+                  <td>{{ eventword.words }}</td>
+                </tr>
+              {% endfor %}
+              </tbody>
+                </table>
+        <h3 style="background-color: rgb(224, 224, 224);padding: 10px 30px;width: 1000px;">事件发展</h3>
+             <div id="main4" style="height:500px;width:1000px"></div>
+        <h3 style="background-color: rgb(224, 224, 224);padding: 10px 30px;width: 1000px;">敏感推文</h3>
+            <table class="ui celled striped table"  style="width: 900px;margin-left: 50px">
+              <thead>
+                <tr><th >发文</th>
+                    <th >发文关键字</th>
+                    <th >点赞次数</th>
+                    <th >转发次数</th>
+                    <th >内容范围</th>
+                    <th >用户账号</th>
+
+              </tr></thead>
+              <tbody>
+                {% for tweet in tweets %}
+                <tr>
+                  <td ><a href="">{{ tweet.tweets }}</a></td>
+                  <td>{{ tweet.keywords }}</td>
+                  <td >{{ tweet.likes }}</td>
+                  <td >{{ tweet.transpond }}</td>
+                  <td >{{ tweet.contextrange }}</td>
+                    <td ><a href="{% url 'socialNetworkCode:media_focus' tweet.mediasource  tweet.useraccounts %}">{{ tweet.useraccounts }}</a></td>
+                </tr>
+              {% endfor %}
+              </tbody>
+                </table>
+        <h3 style="background-color: rgb(224, 224, 224);padding: 10px 30px;width: 1000px;">热度预测</h3>
+            <div id="main5" style="height:400px;width:600px;margin-left:200px"></div>
+
+    </div>
+</div>
+</body>
+<script type="text/javascript" src="{% static 'js/jquery-2.1.0.js' %}"></script>
+<script src="{% static 'js/echarts.js' %}"></script>
+<script type="text/javascript">
+                var myChart = echarts.init(document.getElementById('main1'));
+	            {#chart.removeAttribute("_echarts_instance_");#}
+	            {#myChart = echarts.init(chart);#}
+                data = [["2000-06-05", 116], ["2000-06-06", 129], ["2000-06-07", 135], ["2000-06-08", 86], ["2000-06-09", 73], ["2000-06-10", 85], ["2000-06-11", 73], ["2000-06-12", 68], ["2000-06-13", 92], ["2000-06-14", 130], ["2000-06-15", 245], ["2000-06-16", 139], ["2000-06-17", 115], ["2000-06-18", 111], ["2000-06-19", 309], ["2000-06-20", 206], ["2000-06-21", 137], ["2000-06-22", 128], ["2000-06-23", 85], ["2000-06-24", 94], ["2000-06-25", 71], ["2000-06-26", 106], ["2000-06-27", 84], ["2000-06-28", 93], ["2000-06-29", 85], ["2000-06-30", 73], ["2000-07-01", 83], ["2000-07-02", 125], ["2000-07-03", 107], ["2000-07-04", 82], ["2000-07-05", 44], ["2000-07-06", 72], ["2000-07-07", 106], ["2000-07-08", 107], ["2000-07-09", 66], ["2000-07-10", 91], ["2000-07-11", 92], ["2000-07-12", 113], ["2000-07-13", 107], ["2000-07-14", 131], ["2000-07-15", 111], ["2000-07-16", 64], ["2000-07-17", 69], ["2000-07-18", 88], ["2000-07-19", 77], ["2000-07-20", 83], ["2000-07-21", 111], ["2000-07-22", 57], ["2000-07-23", 55], ["2000-07-24", 60]];
+                var dateList = data.map(function (item) {
+                    return item[0];
+                });
+                var valueList = data.map(function (item) {
+                    return item[1];
+                });
+                option = {
+                    // Make gradient line here
+                    visualMap: {
+                        show: false,
+                        type: 'continuous',
+                        seriesIndex: 0,
+                        min: 0,
+                        max: 400
+                    },
+                    title: {
+                        left: 'center',
+                        text: '热度曲线'
+                    },
+                    tooltip: {
+                        trigger: 'axis'
+                    },
+                    xAxis: {
+                        data: dateList
+                    },
+                    yAxis: {
+                        splitLine: {show: false}
+                    },
+
+                    series: {
+                        type: 'line',
+                        showSymbol: false,
+                        data: valueList
+                    },
+                };
+                myChart.setOption(option);
+</script>
+<script>
+    var myChart = echarts.init(document.getElementById('main2'));
+    option = {
+    tooltip: {
+        trigger: 'item',
+        formatter: "{a} <br/>{b}: {c} ({d}%)"
+    },
+    legend: {
+        orient: 'vertical',
+        x: 'left',
+        data:['支持','反对','中性','狂热','厌恶']
+    },
+    series: [
+        {
+            name:'类型',
+            type:'pie',
+            radius: ['50%', '70%'],
+            avoidLabelOverlap: false,
+            label: {
+                normal: {
+                    show: false,
+                    position: 'center'
+                },
+                emphasis: {
+                    show: true,
+                    textStyle: {
+                        fontSize: '30',
+                        fontWeight: 'bold'
+                    }
+                }
+            },
+            labelLine: {
+                normal: {
+                    show: false
+                }
+            },
+            data:[
+                {value:335, name:'支持'},
+                {value:310, name:'反对'},
+                {value:234, name:'中性'},
+                {value:135, name:'狂热'},
+                {value:1548, name:'厌恶'}
+            ]
+        }
+    ]
+};
+    myChart.setOption(option);
+</script>
+<script>
+    var myChart = echarts.init(document.getElementById('main3'));
+    option = {
+    tooltip: {
+        trigger: 'item',
+        formatter: "{a} <br/>{b}: {c} ({d}%)"
+    },
+    legend: {
+        orient: 'vertical',
+        x: 'left',
+        data:['支持','反对','中性','狂热','厌恶']
+    },
+    series: [
+        {
+            name:'类型',
+            type:'pie',
+            radius: ['50%', '70%'],
+            avoidLabelOverlap: false,
+            label: {
+                normal: {
+                    show: false,
+                    position: 'center'
+                },
+                emphasis: {
+                    show: true,
+                    textStyle: {
+                        fontSize: '30',
+                        fontWeight: 'bold'
+                    }
+                }
+            },
+            labelLine: {
+                normal: {
+                    show: false
+                }
+            },
+            data:[
+                {value:335, name:'支持'},
+                {value:310, name:'反对'},
+                {value:234, name:'中性'},
+                {value:135, name:'狂热'},
+                {value:1548, name:'厌恶'}
+            ]
+        }
+    ]
+};
+    myChart.setOption(option);
+  </script>
+<script type="text/javascript">
+        // 基于准备好的dom，初始化echarts实例
+        var myChart = echarts.init(document.getElementById('main4'));
+        option = {
+
+        backgroundColor: '#0E2A43',
+    animationDurationUpdate: 1500,
+    animationEasingUpdate: 'quinticInOut',
+    label: {
+        normal: {
+            show: true,
+            textStyle: {
+                fontSize: 13
+            },
+        }
+    },
+
+    series: [
+
+        {
+            type: 'graph',
+            layout: 'force',
+            symbolSize: 50,
+            focusNodeAdjacency: true,
+            roam: true,
+            label: {
+                normal: {
+                    show: true,
+                    textStyle: {
+                        fontSize: 15
+                    },
+                }
+            },
+            force: {
+                repulsion: 2500
+            },
+            //edgeSymbol: ['pin'],
+            //edgeSymbolSize: [1, 10],
+            edgeLabel: {
+                normal: {
+                    show: true,
+                    textStyle: {
+                        fontSize: 10
+                    },
+                    formatter: "{c}"
+                }
+            },
+            data: [
+            {
+                name: '黄之锋',
+                draggable: true,
+            },
+            {
+                name: '刘林',
+                draggable: true,
+            },
+            {
+                name: '李卓人',
+                draggable: true,
+            },
+            {
+                name: '区诺轩',
+                draggable: true,
+
+            },
+
+            {
+                name: '黄敬龄',
+
+                draggable: true,
+            },
+            {
+                name: '罗冠聪',
+
+                draggable: true,
+            },
+            {
+                name: 'Angel Li',
+
+                draggable: true,
+            },
+            {
+                name: 'Stephan Leugn',
+
+                draggable: true,
+            },
+            ],
+            links: [{
+                source: '罗冠聪',
+                target: '区诺轩',
+                value:''
+            },
+            {
+                source: '罗冠聪',
+                target: '李卓人',
+value:''
+            },
+            {
+                source: '黄敬龄',
+                target: '罗冠聪',
+value:''
+            },
+            {
+                source: '罗冠聪',
+                target: '刘林',
+value:''
+            },
+            {
+                source: '罗冠聪',
+                target: '黄之锋',
+value:''
+            },
+            {
+                source: '刘林',
+                target: '李卓人',
+value:''
+            },
+            {
+                source: '李卓人',
+                target: '区诺轩',
+                value:''
+            },
+            {
+                source: '区诺轩',
+                target: '黄敬龄',
+                value:''
+            },
+            {
+                source: '黄之锋',
+                target: '刘林',
+                value:''
+            },
+            {
+                source: 'Stephan Leugn',
+                target: '罗冠聪',
+                value:''
+            },
+            {
+                source: 'Angel Li',
+                target: '罗冠聪',
+                value:''
+            }, {
+                source: 'Angel Li',
+                target: '李卓人',
+                    value:''
+            },
+            {
+                source: 'Angel Li',
+                target: '黄敬龄',
+                value:''
+            },
+            ],
+            lineStyle: {
+                normal: {
+                    opacity: 0.6,
+                    width: 1,
+                    curveness: 0.1
+                }
+            }
+        }
+    ]
+};
+        // 使用刚指定的配置项和数据显示图表。
+        myChart.setOption(option);
+    </script>
+<script>
+    var myChart = echarts.init(document.getElementById('main5'));
+    option = {
+    xAxis: {
+        type: 'category',
+        data: ['2018-3-1', '2018-3-2', '2018-3-3', '2018-3-4', '2018-3-5', '2018-3-6', '2018-3-7']
+    },
+    yAxis: {
+        type: 'value'
+    },
+    series: [{
+        data: [120, 200, 150, 80, 70, 110, 130],
+        type: 'line',
+        symbol: 'triangle',
+        symbolSize: 20,
+        lineStyle: {
+            normal: {
+                color: 'green',
+                width: 4,
+                type: 'dashed'
+            }
+        },
+        itemStyle: {
+            normal: {
+                borderWidth: 3,
+                borderColor: 'yellow',
+                color: 'blue'
+            }
+        }
+    }]
+};
+    myChart.setOption(option);
+  </script>
+</html>

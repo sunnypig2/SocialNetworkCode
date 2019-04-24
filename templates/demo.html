@@ -1,0 +1,172 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns="">
+{% load staticfiles %}
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+{#<link rel="stylesheet" href="{% static 'css/semantic-2.3.3.css' %}">#}
+<link rel="stylesheet" href="{% static 'css/demo.css' %}">
+    <title>天鹰监测系统</title>
+</head>
+<body>
+<div style="width: 1300px;margin: auto;">
+    <header style="background-color: #547ca5;height: 100px;vertical-align: center;">
+        <img src="/static/img/eagle.jpg" height="100px" width="120px">
+        <h2 style="text-align: center;margin-top: -60px;">天鹰监测系统</h2>
+        <span style="position:relative;float: right;bottom: 30px;right: 20px;">
+        <a href="#" style="color: black;" >{{ user.username }}<span class="caret"></span></a>
+        <span ><a href="{% url 'socialNetworkCode:logout' %}" style="color: black;" >Logout</a></span>
+        </span>
+    </header>
+    <br>
+    <form action="{% url 'socialNetworkCode:peoplenews'  "random" %}" method="post" style="width: 800px;margin-left: 900px; ">
+        <input type="text" id="name" name="name" autocomplete="off" placeholder="请输入监测用户" style="height: 30px;margin-right: 100px;"/>
+        <button  class="search"  type="submit" style="color:white;background-color:blue;width: 70px;height: 30px;border: 0;" >搜索</button>
+        <div id="box" style="border:1px solid black;display:none;background-color:white;width:158px;position:absolute;left:1010px;top:159px;z-index: 99999"></div>
+    </form>
+    <br>
+    <div style="width:600px;display: inline-block;vertical-align: top;" >
+        <form class="addform" style="display: none;margin: -20px 150px;">
+            <input type="text" id="name" name="name" autocomplete="off" placeholder="请添加监测人物姓名" style="height: 30px;margin-right: 50px;"/>
+            <button  class="search"  type="submit" style="color:white;background-color:blue;width: 70px;height: 30px;border: 0;" >添加</button>
+        </form>
+    <table class="table"   >
+        <caption style="margin: 20px auto;"><b>人物监测列表</b><button class="addbutton" style="margin-left: 100px;color:white;background-color:blue;width: 70px;height: 30px;border: 0;">添加人物</button></caption><br>
+
+        <thead>
+         <tr>
+         <th>头像</th>
+         <th >人物</th>
+        <th >年龄</th>
+        <th >热度</th>
+  </tr></thead>
+  <tbody >
+    {% for message in people %}
+    <tr >
+      <td><img src="{% static message.photo %}" height="40px" width="60px"></td>
+      <td ><a href="{% url 'socialNetworkCode:peoplenews'  message.name %}">{{ message.name}}</a></td>
+      <td >{{ message.age}}</td>
+      <td >{{ message.hot}}</td>
+    </tr>
+  {% endfor %}
+  </tbody>
+    </table>
+<div class="page">
+        {% if people.has_previous %}
+            <a href="{% url 'socialNetworkCode:demo' eventpage  people.previous_page_number %}">  &gt;&gt;pre </a>
+        {% endif %}
+        {% for peoplepagenum in peoplepagenums %}
+            {% if people.number == peoplepagenum %}
+                <a href="{% url 'socialNetworkCode:demo' eventpage  peoplepagenum  %}" style="color:red" >{{ peoplepagenum }}</a>
+            {% else %}
+            <a href="{% url 'socialNetworkCode:demo' eventpage  peoplepagenum  %}">{{ peoplepagenum }}</a>
+            {% endif %}
+        {% endfor %}
+        {% if people.has_next %}
+            <a href="{% url 'socialNetworkCode:demo' eventpage  people.next_page_number %}"> next>> </a>
+        {% endif %}
+    <span>{{ people.number}}   of   {{ people.paginator.num_pages }}</span>
+    </div>
+</div>
+<div style="width:600px;display: inline-block;">
+    <table class="table"  >
+     <caption style="margin: 20px auto;"><b>事件监测列表</b></caption>
+  <thead>
+    <tr><th >事件</th>
+        <th >发文数目</th>
+        <th >时间</th>
+        <th >敏感度</th>
+  </tr></thead>
+  <tbody>
+    {% for message in events %}
+    <tr style="height: 67.2px;">
+     <td ><a href="{% url 'socialNetworkCode:sensitiveinfo'  message.sensitivevent %}"> {{ message.sensitivevent }}</a></td>
+      <td>{{ message.tweetsnum }}</td>
+      <td >{{ message.date }}</td>
+         <td>{{ message.sensitivity }}</td>
+    </tr>
+  {% endfor %}
+  </tbody>
+    </table>
+    <div class="page">
+        {% if events.has_previous %}
+            <a href="{% url 'socialNetworkCode:demo' events.previous_page_number  peoplepage%}">  &gt;&gt;pre </a>
+        {% endif %}
+        {% for eventpagenum in eventpagenums %}
+            {% if events.number == eventpagenum %}
+                <a href="{% url 'socialNetworkCode:demo' eventpagenum  peoplepage  %}" style="color:red" >{{ eventpagenum }}</a>
+            {% else %}
+            <a href="{% url 'socialNetworkCode:demo' eventpagenum  peoplepage  %}">{{ eventpagenum }}</a>
+            {% endif %}
+        {% endfor %}
+        {% if events.has_next %}
+            <a href="{% url 'socialNetworkCode:demo' events.next_page_number  peoplepage%}"> next>> </a>
+        {% endif %}
+    </div>
+</div>
+    <a href="/socialNetworkCode/relationextraction">关系提取</a>
+    <a href="/socialNetworkCode/newgn">社区划分</a>
+
+<br><br><br><br>
+{#</div>#}
+</body>
+<script type="text/javascript" src="{% static 'js/jquery-2.1.0.js' %}"></script>
+{#<script src="/static/js/vue-2.5.16.js"></script>#}
+{#<script src="/static/js/element-ui-2.3.8.js"></script>#}
+<script src="{% static 'js/echarts.js' %}"></script>
+<script src="{% static 'js/myJS.js' %}"></script>
+<script type="text/javascript">
+    window.onload=function () {
+        var searchElement=document.getElementById("name");
+        var box=document.getElementById("box");
+        searchElement.onkeyup=function () {//发给文件筐注册按键弹起事件
+            //获取文本框的值
+            var name=this.value;
+            //获取xhr对象
+            if (name==="") {
+                box.style.display="none";
+                return ;
+            }
+            var xhr=getXMLHttpRequest();
+            xhr.onreadystatechange=function() {
+                if (xhr.readyState===4){//请求一切正常
+                     {#alert(xhr.status);#}
+                    if(xhr.status===200){//服务器响应一切正常
+                         {#alert(xhr.responseText);#}
+                        var str= JSON.parse(xhr.responseText);//得到服务器返回的数据
+                        {#alert(str[0].name);#}
+                        {#alert(typeof(str))#}
+                        var div=document.getElementById("box");
+                        var childDivs="";
+                        for (var i=0;i<str.length;i++){
+                            childDivs+="<div onclick='writeText(this)' onmouseover='changeBackground_over(this)' onmouseout='changeBackground_out(this)'>"+str[i]+"</div>";//把数组中的每个元素放到div中
+                        }
+                        div.innerHTML=childDivs;
+                        div.style.display="block";
+                    }
+                }
+            };
+            xhr.open("get","/socialNetworkCode/search/?name="+name+"&time="+new Date().getTime());//避免缓存
+            xhr.send();
+        }
+    };
+    function changeBackground_over(div) {
+        div.style.backgroundColor="gray";
+    }
+    function changeBackground_out(div) {
+        div.style.backgroundColor="";
+    }
+    function writeText(div) {
+        var searchElement=document.getElementById("name");
+        var box=document.getElementById("box");
+        searchElement.value=div.innerHTML;
+        box.style.display="none";
+    }
+</script>
+<script>
+     {#$(document).ready(function () {#}
+         $(".addbutton").click(function () {
+             $(".addform").css( "display" ,"block");
+
+         });
+
+</script>
+</html>

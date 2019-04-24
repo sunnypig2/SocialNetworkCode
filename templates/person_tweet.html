@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load staticfiles %}
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" href="{% static 'css/main_demo.css' %}">
+<title>天鹰监测系统</title>
+</head>
+<body>
+<div style="width: 1300px;margin: auto;">
+    <header style="background-color: #547ca5;height: 100px;vertical-align: center;">
+        <img src="/static/img/eagle.jpg" height="100px" width="120px">
+        <h2 style="text-align: center;margin-top: -60px;">天鹰监测系统</h2>
+        <span style="position:relative;float: right;bottom: 30px;right: 20px;">
+        <a href="#" style="color: black;" >{{ user.username }}<span class="caret"></span></a>
+        <span ><a href="{% url 'socialNetworkCode:logout' %}" style="color: black;" >Logout</a></span>
+        </span>
+    </header>
+        <br><br>
+    <div class="navigate" style="float: left;background-color: #F9FAFB;">
+        <ul class="">
+            <li><a href="{% url 'socialNetworkCode:demo'  1 1 %}" ><b>信息概况监测</b></a></li>
+            <h3 style="text-align: center;">{{ name }}</h3>
+            <li><a href="" style="background-color:  #ecf5ff">人物推文监测</a></li>
+        </ul>
+    </div>
+    <div class="content" style="float: left;margin-left: 20px;">
+        <h3 >{{ tweet.tweets }}</h3>
+            <div><b>标签：</b>
+                <span style="border: 1px solid #4183C4;margin-left:30px;padding: 2px 20px;border-radius: 8px;">港独</span>
+            <p>关键词：<span >{{ tweet.keywords|safe }}</span></p><p>作者：{{ tweet.useraccounts }}&nbsp&nbsp&nbsp&nbsp时间：{{ tweet.time }}<br>
+                转发：{{ tweet.transpond }}&nbsp&nbsp &nbsp &nbsp点赞：{{ tweet.likes }}&nbsp&nbsp&nbsp&nbsp评论：{{ tweet.comments }}</p>
+            <p style="width: 1000px;margin-left: 20px;">{{ tweet.tweetsdetails|safe }}</p>
+            </div>
+        <h3 style="background-color: rgb(224, 224, 224);padding: 10px 30px;width: 1000px;">最相关评论</h3>
+            <table class="table"  style="width: 900px;margin-left: 50px">
+              <thead>
+                <tr><th >用户</th>
+                    <th >评论</th>
+              </tr></thead>
+              <tbody>
+                {% for tweet in tweets %}
+                <tr>
+                    <td ><a href="">{{ tweet.useraccounts }}</a></td>
+                  <td>{{ tweet.keywords|safe }}</td>
+                </tr>
+              {% endfor %}
+              </tbody>
+            </table>
+        <h3 style="background-color: rgb(224, 224, 224);padding: 10px 30px;width: 1000px;">相似推文推荐</h3>
+            <table class="table"  style="width: 900px;margin-left: 50px">
+                <thead>
+                <tr>
+                    <th >发文</th>
+                    <th >发文关键字</th>
+                    <th >点赞次数</th>
+                    <th >转发次数</th>
+                    <th >内容范围</th>
+                    <th >用户账号</th>
+                  </tr></thead>
+                  <tbody>
+                    {% for tweet in tweets %}
+                    <tr>
+                        <td><a href="{% url 'socialNetworkCode:person_tweet'  tweet.idtweets "罗冠聪" %}">{{ tweet.tweets|safe }}</a></td>
+                        <td>{{ tweet.keywords|safe }}</td>
+                        <td>{{ tweet.likes }}</td>
+                        <td>{{ tweet.transpond }}</td>
+                        <td>{{ tweet.contextrange }}</td>
+                        <td>{{ tweet.useraccounts }}</td>
+                    </tr>
+                  {% endfor %}
+                 </tbody>
+            </table>
+        <h3 style="background-color: rgb(224, 224, 224);padding: 10px 30px;width: 1000px;">评论情绪分析</h3>
+        <div id="main1" style="height:400px; width:500px;margin: auto;"></div>
+
+    </div>
+</div>
+</body>
+<script src="{% static 'js/echarts.js' %}"></script>
+<script src="{% static 'js/jquery-2.1.0.js' %}"></script>
+<script type="text/javascript">
+    // 基于准备好的dom，初始化echarts实例
+    var myChart = echarts.init(document.getElementById('main1'));
+    var option = {
+    title : {
+        text: '评论情绪分析',
+        x:'center'
+    },
+    tooltip : {
+        trigger: 'item',
+        formatter: "{a} <br/>{b} : {c} ({d}%)"
+    },
+    legend: {
+        orient: 'vertical',
+        left: 'left',
+        data: ['喜悦','悲伤','中性','愤怒','惊奇','恐惧']
+    },
+    series : [
+        {
+            name: '访问来源',
+            type: 'pie',
+            radius : ['50%','70%'],
+            center: ['50%', '60%'],
+            data:[
+                {value:1335, name:'喜悦'},
+                {value:110, name:'悲伤'},
+                {value:334, name:'中性'},
+                {value:235, name:'愤怒'},
+                {value:48, name:'惊奇'},
+                {value:28, name:'恐惧'}
+            ],
+            itemStyle: {
+                emphasis: {
+                    shadowBlur: 10,
+                    shadowOffsetX: 0,
+                    shadowColor: 'rgba(0, 0, 0, 0.5)'
+                },
+                normal:{
+                        label:{
+                            show: true,
+                            formatter: '{b} : {d}%'
+                        },
+                        labelLine :{show:true}
+                    }
+            }
+        }
+    ]
+};
+
+myChart.setOption(option);
+</script>
+</html>
