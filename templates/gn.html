@@ -23,7 +23,7 @@
                 <li><a href="/socialNetworkCode/newgn" >监测信息表</a></li>
                 <li><a href="javascript:void(0);"  ><b>用户划分</b></a></li>
                 <li><a href="javascript:void(0);"  ><b>|-社区划分</b></a></li>
-                <li><a href="javascript:void(0);"  >|-兴趣划分</a></li>
+                <li><a href="{% url 'socialNetworkCode:recommendation' name %}"  >|-兴趣划分</a></li>
 
             </ul>
         </div>
@@ -35,21 +35,21 @@
 
         <div class="navigate" style="background-color: #F9FAFB;">
             <ul class="">
-                <li><a href="javascript:void(0);" ><b>分析结果</b></a></li>
-                <li><a href="javascript:void(0);" ><b>同社区关系</b></a></li>
+                <li><a><b>分析结果</b></a></li>
+                <li><a><b>|-同社区关系</b></a></li>
 
                 <li id="spread" class="param" style="color:#4183C4;font-size: 16px;padding:7px 55px;display: block;width: 100px;">影响力</li>
-                <li id="spread_num" class="param" style="color:#4183C4;font-size: 16px;padding:7px 55px;display: block;width: 100px;">影响力因子</li>
+                <li id="spread_num" class="param" style="color:#4183C4;font-size: 16px;padding:7px 55px;display: block;width: 100px;margin-top: 10px;">影响力因子</li>
 
 {#                <li id="sort" class="param" style="color:#4183C4;font-size: 16px;padding:7px 55px;display: block;width: 100px;">派系分析</li>#}
-{#                <li id="part" class="param" style="color:#4183C4;font-size: 16px;padding:7px 55px;display: block;width: 100px;">成分分析</li>#}
-                <li id="gn" class="param" style="color:#4183C4;font-size: 16px;padding:7px 55px;display: block;width: 100px;">社区划分</li>
+                <li id="part" class="param" style="color:#4183C4;font-size: 16px;padding:7px 55px;display: block;width: 100px;margin-bottom: 50px;">成分分析</li>
+{#                <li id="gn" class="param" style="color:#4183C4;font-size: 16px;padding:7px 55px;display: block;width: 100px;">社区划分</li>#}
 
-                <li><a href="javascript:void(0);" ><b>全网络关系</b></a></li>
+                <li><a href="javascript:void(0);" ><b>|-全网络关系</b></a></li>
                 <li id="all_modul" class="param" style="color:#4183C4;font-size: 16px;padding:7px 55px;display: block;width: 100px;">最大模块度</li>
                 <li id="gn_num" class="param" style="color:#4183C4;font-size: 16px;padding:7px 55px;display: block;width: 100px;">社区数量</li>
 
-                <li><a href="javascript:void(0);" ><b>参数下关系</b></a></li>
+                <li style="margin-top: 30px"><a href="javascript:void(0);" ><b>|-参数下关系</b></a></li>
                 <li id="param_modul" class="param" style="color:#4183C4;font-size: 16px;padding:7px 55px;display: block;width: 100px;">最大模块度</li>
                 <li id="param_gn_num" class="param" style="color:#4183C4;font-size: 16px;padding:7px 55px;display: block;width: 100px;">社区数量</li>
 
@@ -60,7 +60,7 @@
 
         <div class="navigate" style="background-color: #F9FAFB;">
             <ul class="">
-                <li><a href="{% url 'socialNetworkCode:demo'  1 1 %}" ><b>参数控制</b></a></li>
+                <li><a href="javascript:void(0);" ><b>参数控制</b></a></li>
                 <li><a href="" onclick='return selectParam("gender")' >性别</a></li>
                 <li><a href="" onclick='return selectParam("province");' >省份</a></li>
 
@@ -82,9 +82,11 @@
 
         <div style="margin-left: 20px;height:500px;width:900px;">
             <div id="main1" style="height:500px;width:450px;float: left"></div>
-            <div id="main1_append" style="float: left;height:500px;width:450px;padding-top:130px;"></div>
+            <div id="main1_append" style="float: left;height:500px;width:450px;"></div>
 
         </div>
+
+{#        <em>gn计算</em>#}
 
 
         <h3 style="background-color: rgb(224, 224, 224);padding: 10px 30px;width: 1000px;">全网络人物关系图</h3>
@@ -123,7 +125,11 @@
             [
                 'echarts',
                 'echarts/chart/force', // 使用柱状图就加载bar模块，按需加载
-                'echarts/chart/tree'
+                'echarts/chart/bar',
+                'echarts/chart/map',
+                'echarts/chart/funnel',
+
+
             ],
         function (ec) {
             var myChart1 = ec.init(document.getElementById('main1'));
@@ -199,54 +205,30 @@
                         nodes: [
                         ],
                         links: [
-                            {#{source: '丽萨-乔布斯', target: '乔布斯'},#}
-                            {#{source: '保罗-乔布斯', target: '乔布斯'},#}
-                            {#{source: '克拉拉-乔布斯', target: '乔布斯', weight: 1, name: '母亲'},#}
-                            {#{source: '劳伦-鲍威尔', target: '乔布斯', weight: 2},#}
-                            {#{source: '史蒂夫-沃兹尼艾克', target: '乔布斯', weight: 3, name: '合伙人'},#}
-                            {#{source: '奥巴马', target: '乔布斯', weight: 1},#}
-                            {#{source: '比尔-盖茨', target: '乔布斯', weight: 6, name: '竞争对手'},#}
-                            {#{source: '乔纳森-艾夫', target: '乔布斯', weight: 1, name: '爱将'},#}
-                            {#{source: '蒂姆-库克', target: '乔布斯', weight: 1},#}
-                            {#{source: '龙-韦恩', target: '乔布斯', weight: 1},#}
-                            {#{source: '克拉拉-乔布斯', target: '保罗-乔布斯', weight: 1},#}
-                            {#{source: '奥巴马', target: '保罗-乔布斯', weight: 1},#}
-                            {#{source: '奥巴马', target: '克拉拉-乔布斯', weight: 1},#}
-                            {#{source: '奥巴马', target: '劳伦-鲍威尔', weight: 1},#}
-                            {#{source: '奥巴马', target: '史蒂夫-沃兹尼艾克', weight: 1},#}
-                            {#{source: '比尔-盖茨', target: '奥巴马', weight: 6},#}
-                            {#{source: '比尔-盖茨', target: '克拉拉-乔布斯', weight: 1},#}
-                            {#{source: '蒂姆-库克', target: '奥巴马', weight: 1}#}
-                        ]
+                               ]
                     }
                 ]
             };
 
-            {#var temp = "'" + {{ name }} + "'";#}
-            console.log(typeof name)
             $.ajax({
                 type:"POST",
                 dataType:"json",
-                url:"{% url 'socialNetworkCode:gn_part' "MmeMagloire" %}",
-                {#url:"{% url 'socialNetworkCode:gn_part' "MmeMagloire" %}",#}
+                url:"{% url 'socialNetworkCode:gn_part' name %}",
                 success:function(data){
                     console.log(data)
                     var length = data.length;
-                    var friends = data[length-1].friends;
+                    var friends = data[length-2].friends;
                     for(var i = 0;i<friends.length;i++){
                         var node = {};
-                        //console.log(friends[i])
                         if(friends[i] == data[0].name){
                             node = {category: 0, name: friends[i], value: 10};
-
                         }else{
                             node = {category: 1, name: friends[i], value: 5};
-
                         }
                         option1.series[0].nodes.push(node);
                     }
 
-                    var length = data.length-2 ;
+                    var length = data.length-3 ;
                     var pair = 0;
                     for(var i = 1;i<length;i++){
                         var list = {source:data[i]["source"+pair],target:data[++i]["target"+pair],weight:1};
@@ -267,9 +249,7 @@
                         ) { //点击的是边
                             var sourceNode = nodes.filter(function (n) {return n.name == data.source})[0];
                             var targetNode = nodes.filter(function (n) {return n.name == data.target})[0];
-                            {#console.log("选中了边 " + sourceNode.name + ' -> ' + targetNode.name + ' (' + data.weight + ')');#}
                         } else { // 点击的是点
-                            {#console.log("选中了" + data.name + '(' + data.value + ')');#}
                         }
                     }
                     myChart1.on(ecConfig.EVENT.CLICK, focus)
@@ -281,114 +261,99 @@
                     myChart1.setOption(option1);
 
 
-                    var spread = data[data.length-2]["maxspread"];
-                    var count = data[data.length-2]["maxcount"];
+                    var spread = data[data.length-3]["maxspread"];
+                    var count = data[data.length-3]["maxcount"];
                     console.log(spread + count)
 
                     //数据分析
-                    $("#spread").html("影响力最大:" + spread);
-                    $("#spread_num").html("影响因子:" + count);
+                    $("#spread").html("影响力最大:<br>" + spread );
+                    $("#spread_num").html("影响因子:<br>" + count);
 
                     $("#sort").html();
                     $("#part").html();
                     $("#gn").html();
 
 
-                }
-            });
-
-
-             //main1_append start
+                    {#取出数据放入层级关系图funnel中#}
+                     //main1_append start
             var myChart11 = ec.init(document.getElementById('main1_append'));
 
-            var data = {
-                "name": "Myriel",
-                "value":4116,
-                "children": [
-                    {
-                        "name": "MmeMagloire",
-                    },
-                    {
-                        "name": "",
-                        "children": [
-                            {"name": "Napoleon", "value": 4116},
-                            {"name": "CountessDeLo", "value": 4116},
-                            {"name": "Geborand", "value": 4116},
-                            {"name": "Champtercier", "value": 4116},
-                            {"name": "Cravatte", "value": 4116},
-                            {"name": "Count", "value": 4116},
-                            {"name": "OldMan", "value": 4116},
-                        ]
-                    },
+            var option11 = {
+                {#//tooltip : {#}
+                {#  //  trigger: 'item',#}
+                {#    //formatter: "{a} <br/>{b} : {c}%"#}
+                {#//},#}
+                legend: {
+                    data : []
+                },
+                calculable : true,
+                series : [
+                        {
+                        name:'金字塔',
+                        type:'funnel',
+                        left:'5%',
+                        top: 60,
+                        bottom: 60,
+                        width: '80%',
+                        min: 0,
+                        max: 100,
+                        minSize: '0%',
+                        maxSize: '100%',
+                        sort : 'ascending',
+                        gap:2,
+                        label: {
+                            show: true,
+                            position: 'inside'
+                            {#    normal: {#}
+                            {#        position: 'left', // 标签的位置:'left'漏斗图的左侧）、'right'(右侧)、'inside'(内部) [ default: 'outside' ]#}
+                            {#    },#}
+                            {#    emphasis: { // 本系列每个数据项中特定的 tooltip 设定#}
+                            {#        position:'left',#}
+                            {#        formatter: '{b}: {c}%'#}
+                            {#    }#}
 
-                    {
-                        "name": "MlleBaptistine",
-
+                        },
+                        labelLine: {
+                            length: 10,
+                            lineStyle: {
+                                width: 1,
+                                type: 'solid'
+                            }
+                        },
+                        itemStyle: {
+                            borderColor: '#fff',
+                            borderWidth: 1
+                        },
+                        data:[]
                     }
                 ]
             };
 
-            //myChart11.util.each(data.children, function (datum, index) {
-            //    index % 2 === 0 && (datum.collapsed = true);
-            //});
 
-            myChart11.setOption(option = {
-                tooltip: {
-                    trigger: 'item',
-                    triggerOn: 'mousemove'
-                },
-                {#legend: {#}
-                {#        top: '2%',#}
-                {#        left: '3%',#}
-                {#        orient: 'vertical',#}
-                {#        data: [#}
-                {#        {#}
-                {#            name: 'level',#}
-                {#            icon: 'rectangle'#}
-                {#        }],#}
-                {#        borderColor: '#35b5c2'#}
-                {#    },#}
-                series:[
-                    {
-                        type: 'tree',
-                        name: 'level',
-                        data: [data],
+                var level_num = data[data.length-1]["level_num"];
+                var level = data[data.length-1]["level"];
+                {#console.log("level_num"+level_num)#}
+                {#console.log("level"+level)#}
+                for(var i = 0;i<level_num;i++){
+                    option11.legend.data.push("level" + (i+1))
+                }
 
-                        top: '1%',
-                        left: '7%',
-                        bottom: '1%',
-                        right: '20%',
-                        height:'70%',
+                {#console.log(option11.legend.data);#}
+                var str = "";
+                for(var key in level){
+                    option11.series[0].data.push({value: 1/key * 10, name: level[key]})
+                    str += ("level" + key + "->" + level[key].split(",").length + "<br>")
+                }
+                {#console.log(option11.series[0].data)#}
+                $("#part").html("成分分析:<br>" + str);
 
-                        symbolSize: 7,
+                myChart11.setOption(option11);
 
-                        label: {
-                            normal: {
-                                position: 'left',
-                                verticalAlign: 'middle',
-                                align: 'right',
-                                fontSize: 9
-                            }
-                        },
+                }
+            });
 
-                        leaves: {
-                            label: {
-                                normal: {
-                                    position: 'right',
-                                    verticalAlign: 'middle',
-                                    align: 'left'
-                                }
-                            }
-                        },
 
-                        expandAndCollapse: true,
-
-                        animationDuration: 550,
-                        animationDurationUpdate: 750
-        }
-    ]
-});
-
+            //main1_append  end
 
             // 为echarts对象加载数据
             //myChart1.setOption(option1);
@@ -486,167 +451,69 @@
                             gravity: 1.1,
                             scaling: 1.1,
                             roam: 'move',
-                            nodes:[
-                                {category:0, name: '305142'},
-                                {category:0, name: '5494771351'},
-                                {category:0, name: '1786765390'},
-                                {category:0, name: '3439746044'},
-
-                                {category:1, name: '5194924395'},
-                                {category:1, name: '3740408065'},
-                                {category:1, name: '3542512733'},
-                                {category:1, name: '5012576846'},
-                                {category:1, name: '5529434997'},
-                                {category:1, name: '2013308075'},
-
-                                {category:2, name: '5502134977'},
-
-                                {category:3, name: '6615486306'},
-                                {category:3, name: '6744860471'},
-                                {category:3, name: '5629072572'},
-                                {category:3, name: '6816672518'},
-                                {category:3, name: '6874200356'},
-                                {category:3, name: '6881116776'},
-
-                                {category:4, name: '6148325595'},
-                                {category:4, name: '6887070760'},
-                                {category:4, name: '5708517202'},
-
-                                {category:5, name: '6387006896'},
-                                {category:5, name: '6364149230'},
-
-                                {category:6, name: '6615268702'},
-                                {category:6, name: '6473182874'},
-                                {category:6, name: '6585190985'},
-                                {category:6, name: '6591953768'},
-                                {category:6, name: '6596404821'},
-                                {category:6, name: '6589156261'},
-                                {category:6, name: '6591987475'},
-                                {category:6, name: '6452677799'},
-
-
-                            ],
-                            links : [
-                                {source : '2013308075', target : '1786765390', weight : 1},
-                                {source : '2013308075', target : '3542512733', weight : 8},
-                                {source : '2013308075', target : '3740408065', weight : 10},
-                                {source : '305142', target : '1786765390', weight : 6},
-                                {source : '3439746044', target : '1786765390', weight : 1},
-                                {source : '3439746044', target : '305142', weight : 1},
-                                {source : '3542512733', target : '1786765390', weight : 1},
-                                {source : '3542512733', target : '3740408065', weight : 1},
-                                {source : '3542512733', target : '5012576846', weight : 2},
-                                {source : '3542512733', target : '5529434997', weight : 1},
-                                {source : '3740408065', target : '1786765390', weight : 1},
-                                {source : '3740408065', target : '5194924395', weight : 3},
-                                {source : '5012576846', target : '1786765390', weight : 3},
-                                {source : '5012576846', target : '5194924395', weight : 5},
-                                {source : '5012576846', target : '5529434997', weight : 1},
-                                {source : '5194924395', target : '1786765390', weight : 1},
-                                {source : '5194924395', target : '5529434997', weight : 1},
-                                {source : '5494771351', target : '1786765390', weight : 1},
-                                {source : '5502134977', target : '1786765390', weight : 4},
-                                {source : '5529434997', target : '2013308075', weight : 4},
-                                {source : '5629072572', target : '5529434997', weight : 4},
-                                {source : '5629072572', target : '3439746044', weight : 4},
-                                {source : '5629072572', target : '305142', weight : 4},
-                                {source : '5629072572', target : '1786765390', weight : 4},
-                                {source : '5708517202', target : '5629072572', weight : 3},
-                                {source : '5708517202', target : '6148325595', weight : 3},
-                                {source : '5708517202', target : '6364149230', weight : 1},
-                                {source : '5708517202', target : '6887070760', weight : 1},
-                                {source : '6148325595', target : '5629072572', weight : 1},
-                                {source : '6148325595', target : '6744860471', weight : 1},
-                                {source : '6148325595', target : '6887070760', weight : 1},
-                                {source : '6364149230', target : '5629072572', weight : 1},
-                                {source : '6364149230', target : '6881116776', weight : 1},
-                                {source : '6387006896', target : '5629072572', weight : 1},
-                                {source : '6364149230', target : '6387006896', weight : 1},
-                                {source : '6473182874', target : '6452677799', weight : 1},
-                                {source : '6585190985', target : '6452677799', weight : 1},
-                                {source : '6585190985', target : '6473182874', weight : 1},
-                                {source : '6589156261', target : '6452677799', weight : 1},
-                                {source : '6589156261', target : '6473182874', weight : 1},
-                                {source : '6589156261', target : '6585190985', weight : 1},
-                                {source : '6591953768', target : '6452677799', weight : 1},
-                                {source : '6591953768', target : '6473182874', weight : 1},
-                                {source : '6591953768', target : '6585190985', weight : 1},
-                                {source : '6591953768', target : '6589156261', weight : 1},
-                                {source : '6591987475', target : '6452677799', weight : 1},
-                                {source : '6591987475', target : '6473182874', weight : 1},
-                                {source : '6591987475', target : '6585190985', weight : 1},
-                                {source : '6591987475', target : '6589156261', weight : 1},
-                                {source : '6591987475', target : '6591953768', weight : 1},
-                                {source : '6596404821', target : '6452677799', weight : 1},
-                                {source : '6596404821', target : '6473182874', weight : 1},
-                                {source : '6596404821', target : '6585190985', weight : 1},
-                                {source : '6596404821', target : '6589156261', weight : 1},
-                                {source : '6596404821', target : '6591953768', weight : 1},
-                                {source : '6596404821', target : '6591987475', weight : 1},
-                                {source : '6615268702', target : '6452677799', weight : 1},
-                                {source : '6615268702', target : '6473182874', weight : 1},
-                                {source : '6615268702', target : '6585190985', weight : 1},
-                                {source : '6615268702', target : '6589156261', weight : 1},
-                                {source : '6615268702', target : '6591953768', weight : 1},
-                                {source : '6615268702', target : '6591987475', weight : 1},
-                                {source : '6615268702', target : '6596404821', weight : 1},
-                                {source : '6615268702', target : '5708517202', weight : 1},
-                                {source : '6615268702', target : '5629072572', weight : 1},
-                                {source : '6615486306', target : '6615268702', weight : 1},
-                                {source : '6615486306', target : '5629072572', weight : 1},
-                                {source : '6744860471', target : '6615486306', weight : 1},
-                                {source : '6744860471', target : '6615268702', weight : 1},
-                                {source : '6744860471', target : '5629072572', weight : 1},
-                                {source : '6816672518', target : '6615486306', weight : 1},
-                                {source : '6816672518', target : '5629072572', weight : 1},
-                                {source : '6816672518', target : '6452677799', weight : 1},
-                                {source : '6816672518', target : '6744860471', weight : 1},
-                                {source : '6874200356', target : '5629072572', weight : 1},
-                                {source : '6874200356', target : '6615268702', weight : 1},
-                                {source : '6874200356', target : '6744860471', weight : 1},
-                                {source : '6874200356', target : '6615486306', weight : 1},
-                                {source : '6874200356', target : '6816672518', weight : 1},
-                                {source : '6881116776', target : '5629072572', weight : 1},
-                                {source : '6881116776', target : '6874200356', weight : 1},
-                                {source : '6887070760', target : '6615268702', weight : 1},
-                                {source : '6887070760', target : '6874200356', weight : 1},
-                                {source : '6887070760', target : '5629072572', weight : 1},
-
-                            ]
+                            nodes:[],
+                            links : []
                         }
                     ]
                 };
 
-            var ecConfig = require('echarts/config');
+            $.ajax({
+                type:"POST",
+                dataType:"json",
+                url:"{% url 'socialNetworkCode:all_gn' %}",
+                success:function(data){
+                    var len = data.length-1;
+                    var communites = data[len].communites;
+                    for(var i = 0;i<communites.length;i++){
+                        var node = {};
+                        for(var j = 0;j<communites[i].length;j++){
+                            node = {category: i, name: communites[i][j], value: 10};
+                            option.series[0].nodes.push(node);
+                        }
+                    }
 
-            function focus2(param) {
-                var data = param.data;
-                var links = option.series[0].links;
-                var nodes = option.series[0].nodes;
-                if (
-                    data.source !== undefined
-                    && data.target !== undefined
-                ) { //点击的是边
-                    var sourceNode = nodes.filter(function (n) {return n.name == data.source})[0];
-                    var targetNode = nodes.filter(function (n) {return n.name == data.target})[0];
-                    console.log("选中了边 " + sourceNode.name + ' -> ' + targetNode.name + ' (' + data.weight + ')');
-                } else { // 点击的是点
-                    console.log("选中了" + data.name + '(' + data.value + ')');
-                }
-                }
-            myChart.on(ecConfig.EVENT.CLICK, focus2)
+                    var length = data.length-1 ;
+                    var pair = 0;
+                    for(var i = 0;i<length;i++){
+                        var list = {source:data[i]["source"+pair],target:data[++i]["target"+pair],weight:1};
+                        pair++;
+                        option.series[0].links.push(list);
 
-            myChart.on(ecConfig.EVENT.FORCE_LAYOUT_END, function () {
-            console.log(myChart.chart.force.getPosition());
+                    }
+
+                    var ecConfig = require('echarts/config');
+
+                    function focus2(param) {
+                        var data = param.data;
+                        var links = option.series[0].links;
+                        var nodes = option.series[0].nodes;
+                        if (
+                            data.source !== undefined
+                            && data.target !== undefined
+                        ) { //点击的是边
+                            var sourceNode = nodes.filter(function (n) {return n.name == data.source})[0];
+                            var targetNode = nodes.filter(function (n) {return n.name == data.target})[0];
+                            console.log("选中了边 " + sourceNode.name + ' -> ' + targetNode.name + ' (' + data.weight + ')');
+                        } else { // 点击的是点
+                            console.log("选中了" + data.name + '(' + data.value + ')');
+                        }
+                        }
+                    myChart.on(ecConfig.EVENT.CLICK, focus2)
+
+                    myChart.on(ecConfig.EVENT.FORCE_LAYOUT_END, function () {
+                        console.log(myChart.chart.force.getPosition());
+                    });
+
+                    // 为echarts对象加载数据
+                    myChart.setOption(option);
+
+                    $("#all_modul").html("最大模块度:<br>" + 0.47);
+                    $("#gn_num").html("最优社区数量:<br>20");
+
+                }
             });
 
-            // 为echarts对象加载数据
-            myChart.setOption(option);
-
-            $("#all_modul").html("最大模块度:" + 0.47);
-            $("#gn_num").html("最优社区数量:20");
             //chart2 end
-
         }
         );
 
@@ -659,7 +526,7 @@
             $.ajax({
                 type:'POST',
                 dataType:"json",
-                url:"{% url 'socialNetworkCode:param_gender' "MmeMagloire" %}?select=" + select,
+                url:"{% url 'socialNetworkCode:param_gender' name %}?select=" + select,
                 success:function(data) {
                     console.log(data)
 
@@ -743,30 +610,10 @@
                                         roam: 'move',
                                         nodes: [],
                                         links: [
-                                            {#{source: '丽萨-乔布斯', target: '乔布斯'},#}
-                                            {#{source: '保罗-乔布斯', target: '乔布斯'},#}
-                                            {#{source: '克拉拉-乔布斯', target: '乔布斯', weight: 1, name: '母亲'},#}
-                                            {#{source: '劳伦-鲍威尔', target: '乔布斯', weight: 2},#}
-                                            {#{source: '史蒂夫-沃兹尼艾克', target: '乔布斯', weight: 3, name: '合伙人'},#}
-                                            {#{source: '奥巴马', target: '乔布斯', weight: 1},#}
-                                            {#{source: '比尔-盖茨', target: '乔布斯', weight: 6, name: '竞争对手'},#}
-                                            {#{source: '乔纳森-艾夫', target: '乔布斯', weight: 1, name: '爱将'},#}
-                                            {#{source: '蒂姆-库克', target: '乔布斯', weight: 1},#}
-                                            {#{source: '龙-韦恩', target: '乔布斯', weight: 1},#}
-                                            {#{source: '克拉拉-乔布斯', target: '保罗-乔布斯', weight: 1},#}
-                                            {#{source: '奥巴马', target: '保罗-乔布斯', weight: 1},#}
-                                            {#{source: '奥巴马', target: '克拉拉-乔布斯', weight: 1},#}
-                                            {#{source: '奥巴马', target: '劳伦-鲍威尔', weight: 1},#}
-                                            {#{source: '奥巴马', target: '史蒂夫-沃兹尼艾克', weight: 1},#}
-                                            {#{source: '比尔-盖茨', target: '奥巴马', weight: 6},#}
-                                            {#{source: '比尔-盖茨', target: '克拉拉-乔布斯', weight: 1},#}
-                                            {#{source: '蒂姆-库克', target: '奥巴马', weight: 1}#}
-                                        ]
+                                             ]
                                     }
                                 ]
                             };
-
-                            {#var temp = "MmeMagloire";#}
 
                             var communication = data[0]['communication'];
                             var length = communication.length;
@@ -798,9 +645,9 @@
                             //
                             var maxQ = data[2]['maxQ'];
 
-                            $("#param_modul").html("最大模块度:" + maxQ.toFixed(2));
+                            $("#param_modul").html("最大模块度:<br>" + maxQ.toFixed(2));
 
-                            $("#param_gn_num").html("最优社区数量:" + length);
+                            $("#param_gn_num").html("最优社区数:<br>" + length);
 
                         })
 

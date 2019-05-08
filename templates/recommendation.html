@@ -17,22 +17,17 @@
         </span>
     </header>
         <br><br>
-    <div class="navigate" style="float: left;background-color: #F9FAFB;">
-        <ul class="">
-            <li><a href="{% url 'socialNetworkCode:demo'  1 1 %}" ><b>信息概况监测</b></a></li>
-            <h3 style="text-align: center;">{{ name }}</h3>
-            <li><a href="{% url 'socialNetworkCode:peoplenews'  name  %}"  >人物介绍</a></li>
-            <li><a href="{% url 'socialNetworkCode:all_analysis'  name  %}" >人物整体分析</a></li>
-            <li><a href="{% url 'socialNetworkCode:sin_analysis'  name  %}" >人物单体分析</a></li>
-            <li><a href="{% url 'socialNetworkCode:gn'  name  %}">社区划分</a></li>
-            <li><a href="{% url 'socialNetworkCode:recommendation'  name  %}" style="background-color:  #ecf5ff">用户推荐</a></li>
+    <div class="navigate" style="background-color: #F9FAFB;float: left;">
+            <ul class="">
+                <li><a href="/socialNetworkCode/newgn" >监测信息表</a></li>
+                <li><a href="javascript:void(0);"  ><b>用户划分</b></a></li>
+                <li><a href="{% url 'socialNetworkCode:gn' name %}"  >|-社区划分</a></li>
+                <li><a href="javascript:void(0);"  ><b>|-兴趣划分</b></a></li>
 
-        </ul>
-    </div>
+            </ul>
+        </div>
     <div class="content" style="float: left;margin-left: 20px;">
-        <br><br>
         <h3 style="background-color: rgb(224, 224, 224);padding: 10px 30px;width: 1000px;">相似人物推荐</h3>
-{#            <div id="main1" style="width: 600px;height:400px;margin: auto;"></div>#}
         <table class="table"  style="width: 900px;margin-left: 50px">
             <thead>
                 <tr><th >相似人物</th><th>相似标签</th></tr>
@@ -44,9 +39,8 @@
 
 {#                    {% console.log(sim_people) %}#}
                     <tr>
-                        {% for i in info %}
-                            <td>{{ i }}</td>
-                        {% endfor %}
+                            <td><a href="javascript:void(0);"  >{{ info }}</a></td>
+                            <td>Topic{{ type }}</td>
 
                     </tr>
                     {% endfor %}
@@ -54,13 +48,85 @@
                 </tbody>
         </table>
 
+        <h3 style="background-color: rgb(224, 224, 224);padding: 10px 30px;width: 1000px;">标签主题</h3>
+        <table class="table"  style="width: 900px;margin-left: 50px">
+            <thead>
+                <tr><th >标签</th><th>主题</th></tr>
+            </thead>
+                <tbody>
+                    <tr>
+                            <td>Topic{{ type }}</td>
+                            <td>{{ topic_word }}</td>
+                    </tr>
+                </tbody>
+        </table>
+
+
+        <h3 style="background-color: rgb(224, 224, 224);padding: 10px 30px;width: 1000px;">用户关联</h3>
+        <div id="aprior" style="margin-left: 20px;height:600px;width:900px;"></div>
+
+
 
     </div>
 </div>
 </body>
-<script type="text/javascript">
-    window.onload = function(){
-        console.log( sim_people )
-    }
-</script>
+{#    <script src="http://echarts.baidu.com/build/dist/echarts.js"></script>#}
+    <script src="{% static 'js/jquery-2.1.0.js' %}"></script>
+    <script src="{% static 'js/echarts.js' %}"></script>
+
+    <script type="text/javascript">
+        {#console.log({{ aprior }})#}
+
+        let myChart = echarts.init(document.getElementById('aprior'))
+
+        var option = {
+            title: {
+                text: '用户关联雷达图'
+            },
+            tooltip: {},
+            legend: {
+                data: ['关联度值（Allocated Budget）']
+            },
+            radar: {
+                // shape: 'circle',
+                name: {
+                    textStyle: {
+                        color: '#fff',
+                        backgroundColor: '#999',
+                        borderRadius: 3,
+                        padding: [3, 5]
+                   }
+                },
+                indicator: [
+                ]
+            },
+            series: [{
+                name: '预算 vs 开销（Budget vs spending）',
+                type: 'radar',
+                // areaStyle: {normal: {}},
+                data : [
+                    {
+                        value : [],
+                        name : '关联度值（Allocated Budget）'
+                    }
+                ]
+            }]
+        };
+
+        var dict = {{ aprior|safe }}
+        {#console.log(Object.keys(dict).length)#}
+        if(Object.keys(dict).length >0){
+            for(var key in dict){
+                var node = {}
+                node = {name:key,max:1};
+                option.radar.indicator.push(node);
+                option.series[0].data[0].value.push(dict[key]);
+             }
+        }
+
+
+
+        myChart.setOption(option)
+    </script>
+
 </html>

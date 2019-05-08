@@ -22,6 +22,8 @@ urlpatterns = [
     path('friend_circle/<str:name>', views.friend_circle, name='friend_circle'),
 
     path('gn_part/<str:name>', views.gn_part, name='gn_part'),
+    path('all_gn', views.all_gn, name='all_gn'),
+
     path('param_gender/<str:name>', views.param_gender, name='param_gender'),
     # path('gn_part/<str:name>', views.gn_part, name='gn_part'),
 

@@ -162,109 +162,58 @@ def gn(request,name):
 # //add
 @login_required
 def recommendation(request, name):
-    friend = []
     sim_people = []
-    # name = "MmeMagloire"
     dict = {}
-    # 生成数据集
-    dict["MmeMagloire"] = ['摄影师','狗狗','睡觉','电影','90后','旅游']
-    dict["Geborand"] = ['健身','美食','武汉大学']
-    dict["MlleBaptistine"] = ['剁手','美食','快乐','活力']
-    dict["Napoleon"] = ['唱歌','宅','时尚','美食','音乐','电影','活力','希望','信念','快乐']
-    dict["Champtercier"] = ['剁手','美食','快乐','活力']
-    dict["CountessDeLo"] = ['健康','90后']
-    dict["Cravatte"] = ['体育']
-    dict["Count"] = ['名人明星','旅游','IT数码','美女']
-    dict["Myriel"] = ['旅游','活力','信念','健身']
-    dict["OldMan"] = ['美食']
-    dict["Labarre"] = ['健身','抽奖','转发狂魔']
-    dict["Anzelma"] = ['生活','睡觉','90后']
-    dict["Gillenormand"] = ['转发狂魔']
-    dict["Fauchelevent"] = ['摄影师','狗狗','睡觉','电影','90后','旅游']
-    dict["Montparnasse"] = ['健身','美食','武汉大学']
-    dict["MotherInnocent"] = ['剁手','美食','快乐','活力']
-    dict["Javert"] = ['唱歌','宅','时尚','美食','音乐','电影','活力','希望','信念','快乐']
-    dict["Woman2"] = ['剁手','美食','快乐','活力']
-    dict["MmeThenardier"] = ['健康','90后']
-    dict["Simplice"] = ['体育']
-    dict["Woman1"] = ['名人明星','旅游','IT数码','美女']
-    dict["Thenardier"] = ['旅游','活力','信念','健身']
-    dict["MlleGillenormand"] = ['旅游','活力','信念','健身']
-    dict["Eponine"] = ['美食']
-    dict["Gueulemer"] = ['健身','抽奖','转发狂魔']
-    dict["Babet"] = ['生活','睡觉','90后']
-    dict["Claquesous"] = ['转发狂魔']
-    dict["Brujon"] = ['摄影师','狗狗','睡觉','电影','90后','旅游']
-    dict["Marius"] = ['健身','美食','武汉大学']
-    dict["Cosette"] = ['剁手','美食','快乐','活力']
-    dict["Valjean"] = ['剁手','美食','快乐','活力']
-    dict["Zephine"] = ['体育']
-    dict["Fantine"] = ['健康','90后']
-    dict["Tholomyes"] = ['生活','睡觉','90后']
-    dict["Dahlia"] = ['美食']
-    dict["Fameuil"] = ['体育']
-    dict["Listolier"] = ['生活','睡觉','90后']
-    dict["Blacheville"] = ['美食']
-    dict["Marguerite"] = ['转发狂魔']
-    dict["Favourite"] = ['健康','90后']
-    dict["MmeDeR"] = ['生活']
-    dict["Isabeau"] = ['转发狂魔']
-    dict["Gervais"] = ['健康','90后']
-    dict["Chenildieu"] = ['生活']
-    dict["Brevet"] = ['美食']
-    dict["Cochepaille"] = ['转发狂魔']
-    dict["Bamatabois"] = ['生活','睡觉','90后']
-    dict["Champmathieu"] = ['剁手','美食','快乐','活力']
-    dict["Judge"] = ['转发狂魔']
-    dict["Perpetue"] = ['生活']
-    dict["Scaufflaire"] = ['健康','90后']
-    dict["MmePontmercy"] = ['转发狂魔']
-    dict["Pontmercy"] = ['生活']
-    dict["Boulatruelle"] = ['健康','90后']
-    dict["Gribier"] = ['生活']
-    dict["Jondrette"] = ['转发狂魔']
-    dict["Mabeuf"] = ['健康','90后']
-    dict["MmeBurgon"] = ['美食']
-    dict["Combeferre"] = ['快乐','活力']
-    dict["Prouvaire"] = ['生活']
-    dict["Joly"] = ['健康','90后']
-    dict["Grantaire"] = ['美食']
-    dict["Feuilly"] = ['健康','90后']
-    dict["Bahorel"] = "woman"
-    dict["Courfeyrac"] = ['美食']
-    dict["Gavroche"] = ['健康','90后']
-    dict["Bossuet"] = "man"
-    dict["MotherPlutarch"] = ['剁手','活力']
-    dict["Child1"] = ['美食']
-    dict["MmeHucheloup"] = ['健身','武汉大学']
-    dict["Child2"] = ['健身']
-    dict["Enjolras"] = ['美食']
-    dict["Magnon"] = ['健身','美食','武汉大学']
-    dict["MlleVaubois"] = ['健身']
-    dict["LtGillenormand"] = ['武汉大学']
-    dict["BaronessT"] = ['美食']
-    dict["Toussaint"] = ['美食']
+    name_type = "0"
 
-    label = []
-    # sim_people_label = []
+    nickname = {}
+    with open('./system/data/nickname.txt', 'r', encoding='UTF-8') as f:
+        for line in f:
+            nickname[line.split(",")[0]] = line.split(",")[1].strip("\n")
+
+    with open('./system/result/doc_topic.txt') as f:
+        for line in f:
+            s_key = line.split(":")[0]
+            s_value = line.split(":")[1].strip('\n')
+
+            dict[s_key] = s_value
+            if s_key == name:
+                name_type = s_value
 
     for key in dict:
-        if key == name:
-            label = dict[key]
-            break
-
-    for key in dict:
-        temp = dict[key]
         if key != name:
-            for t in temp:
-                if t in label:
-                    sim_people.append([key,t])
-                    # sim_people_label.append(t)
+            if dict[key] == name_type:
+                sim_people.append(nickname[key])
 
-    print(sim_people)
+    # print(sim_people)
+
+    # 生成name_type对应的word
+    topic_word = ""
+    with open('./system/result/topic_word.txt','r', encoding='UTF-8') as f:
+        for line in f:
+            s_key = line.split(":")[0]
+            s_value = line.split(":")[1].strip('\n')
+            if s_key == ("Topic #" + str(name_type)):
+                topic_word = s_value
 
 
-    return render(request, 'recommendation.html', {"name": name,"sim_people": sim_people})
+    # 生成aprior算法数据
+
+    dictrory = {}
+    with open('./system/result/aprior.txt','r', encoding='UTF-8') as f:
+        for line in f:
+            s1 = line.split(",")[0].split("'")[1]
+            s2 = line.split(",")[1]
+            s3 = line.split(",")[2].strip('\n')
+
+            if s1 == name:
+                for i in range(len(s2.split("'"))):
+                    if i%2 ==1:
+                        # print(s2.split("'")[i])
+                        dictrory[nickname[s2.split("'")[i]]] = s3
+
+    print(dictrory)
+    return render(request, 'recommendation.html', {"name": name,"sim_people": sim_people,"type": name_type,"topic_word":topic_word,"aprior": json.dumps(dictrory)})
 
 
 @login_required
@@ -289,29 +238,55 @@ def friend_circle(request, name):
     print(rejson)
     return HttpResponse(json.dumps(rejson))
 
+# //add
+def all_gn(request):
+    nickname = {}
+    with open('./system/data/nickname.txt', 'r', encoding='UTF-8') as f:
+        for line in f:
+            nickname[line.split(",")[0]] = line.split(",")[1].strip("\n")
+
+    communites = []
+    with open('./system/data/communites.txt', 'r', encoding='UTF-8') as f:
+        for line in f:
+            communite = []
+            for num in line.split(","):
+                communite.append(nickname[num.strip('\n')])
+            communites.append(communite)
+
+    edges = []
+    with open('./system/data/edges.txt', 'r', encoding='UTF-8') as f:
+        for line in f:
+            edge = []
+            for num in line.split(","):
+                edge.append(num.strip('\n'))
+            edges.append(edge)
+
+
+
+    rejson = []
+    i = 0
+    for edge in edges:
+        rejson.append({"source" + str(i): nickname[edge[0]]})
+        rejson.append({"target" + str(i): nickname[edge[1]]})
+        i = i+1
+
+    rejson.append({"communites": communites})
+
+    print(rejson)
+    return HttpResponse(json.dumps(rejson))
+
+
+
 def gn_part(request, name):
     # name = "MmeMagloire"
     communites = []
-    communites.append(['MmeMagloire', 'Geborand', 'MlleBaptistine', 'Napoleon', 'Champtercier', 'CountessDeLo', 'Cravatte', 'Count', 'Myriel', 'OldMan'])
-    communites.append(['Labarre'])
-    communites.append(['Anzelma', 'Gillenormand', 'Fauchelevent', 'Montparnasse', 'MotherInnocent', 'Javert', 'Woman2', 'MmeThenardier', 'Simplice', 'Woman1', 'Thenardier', 'MlleGillenormand', 'Eponine', 'Gueulemer', 'Babet', 'Claquesous', 'Brujon', 'Marius', 'Cosette', 'Valjean'])
-    communites.append(['Zephine', 'Fantine', 'Tholomyes', 'Dahlia', 'Fameuil', 'Listolier', 'Blacheville', 'Marguerite', 'Favourite'])
-    communites.append(['MmeDeR'])
-    communites.append(['Isabeau'])
-    communites.append(['Gervais'])
-    communites.append(['Chenildieu', 'Brevet', 'Cochepaille', 'Bamatabois', 'Champmathieu', 'Judge'])
-    communites.append(['Perpetue'])
-    communites.append(['Scaufflaire'])
-    communites.append(['MmePontmercy', 'Pontmercy'])
-    communites.append(['Boulatruelle'])
-    communites.append(['Gribier'])
-    communites.append(['Jondrette'])
-    communites.append(['Mabeuf', 'MmeBurgon', 'Combeferre', 'Prouvaire', 'Joly', 'Grantaire', 'Feuilly', 'Bahorel', 'Courfeyrac', 'Gavroche', 'Bossuet', 'MotherPlutarch', 'Child1', 'MmeHucheloup', 'Child2', 'Enjolras'])
-    communites.append(['Magnon'])
-    communites.append(['MlleVaubois'])
-    communites.append(['LtGillenormand'])
-    communites.append(['BaronessT'])
-    communites.append(['Toussaint'])
+
+    with open('./system/data/communites.txt','r',encoding='UTF-8') as f:
+        for line in f:
+            communite = []
+            for num in line.split(","):
+                communite.append(num.strip('\n'))
+            communites.append(communite)
 
     friends = []
     for communite in communites:
@@ -321,269 +296,27 @@ def gn_part(request, name):
     print(friends)
 
     edges = []
-    edges.append(["Napoleon","Myriel"])
-    edges.append(["MlleBaptistine","Myriel"])
-    edges.append(["MmeMagloire","Myriel"])
-    edges.append(["MmeMagloire","MlleBaptistine"])
-    edges.append(["CountessDeLo","Myriel"])
-    edges.append(["Geborand","Myriel"])
-    edges.append(["Champtercier","Myriel"])
-    edges.append(["Cravatte","Myriel"])
-    edges.append(["Count","Myriel"])
-    edges.append(["OldMan","Myriel"])
-    edges.append(["Valjean","Labarre"])
-    edges.append(["Valjean","MmeMagloire"])
-    edges.append(["Valjean","MlleBaptistine"])
-    edges.append(["Valjean","Myriel"])
-    edges.append(["Marguerite","Valjean"])
-    edges.append(["MmeDeR","Valjean"])
-    edges.append(["Isabeau","Valjean"])
-    edges.append(["Gervais","Valjean"])
-    edges.append(["Listolier","Tholomyes"])
-    edges.append(["Fameuil","Tholomyes"])
-    edges.append(["Fameuil","Listolier"])
-    edges.append(["Blacheville","Tholomyes"])
-    edges.append(["Blacheville","Listolier"])
-    edges.append(["Blacheville","Fameuil"])
-    edges.append(["Favourite","Tholomyes"])
-    edges.append(["Favourite","Listolier"])
-    edges.append(["Favourite","Fameuil"])
-    edges.append(["Favourite","Blacheville"])
-    edges.append(["Dahlia","Tholomyes"])
-    edges.append(["Dahlia","Listolier"])
-    edges.append(["Dahlia","Fameuil"])
-    edges.append(["Dahlia","Blacheville"])
-    edges.append(["Dahlia","Favourite"])
-    edges.append(["Zephine","Tholomyes"])
-    edges.append(["Zephine","Listolier"])
-    edges.append(["Zephine","Fameuil"])
-    edges.append(["Zephine","Blacheville"])
-    edges.append(["Zephine","Favourite"])
-    edges.append(["Zephine","Dahlia"])
-    edges.append(["Fantine","Tholomyes"])
-    edges.append(["Fantine","Listolier"])
-    edges.append(["Fantine","Fameuil"])
-    edges.append(["Fantine","Blacheville"])
-    edges.append(["Fantine","Favourite"])
-    edges.append(["Fantine","Dahlia"])
-    edges.append(["Fantine","Zephine"])
-    edges.append(["Fantine","Marguerite"])
-    edges.append(["Fantine","Valjean"])
-    edges.append(["MmeThenardier","Fantine"])
-    edges.append(["MmeThenardier","Valjean"])
-    edges.append(["Thenardier","MmeThenardier"])
-    edges.append(["Thenardier","Fantine"])
-    edges.append(["Thenardier","Valjean"])
-    edges.append(["Cosette","MmeThenardier"])
-    edges.append(["Cosette","Valjean"])
-    edges.append(["Cosette","Tholomyes"])
-    edges.append(["Cosette","Thenardier"])
-    edges.append(["Javert","Valjean"])
-    edges.append(["Javert","Fantine"])
-    edges.append(["Javert","Thenardier"])
-    edges.append(["Javert","MmeThenardier"])
-    edges.append(["Javert","Cosette"])
-    edges.append(["Fauchelevent","Valjean"])
-    edges.append(["Fauchelevent","Javert"])
-    edges.append(["Bamatabois","Fantine"])
-    edges.append(["Bamatabois","Javert"])
-    edges.append(["Bamatabois","Valjean"])
-    edges.append(["Perpetue","Fantine"])
-    edges.append(["Simplice","Perpetue"])
-    edges.append(["Simplice","Valjean"])
-    edges.append(["Simplice","Fantine"])
-    edges.append(["Simplice","Javert"])
-    edges.append(["Scaufflaire","Valjean"])
-    edges.append(["Woman1","Valjean"])
-    edges.append(["Woman1","Javert"])
-    edges.append(["Judge","Valjean"])
-    edges.append(["Judge","Bamatabois"])
-    edges.append(["Champmathieu","Valjean"])
-    edges.append(["Champmathieu","Judge"])
-    edges.append(["Champmathieu","Bamatabois"])
-    edges.append(["Brevet","Judge"])
-    edges.append(["Brevet","Champmathieu"])
-    edges.append(["Brevet","Valjean"])
-    edges.append(["Brevet","Bamatabois"])
-    edges.append(["Chenildieu","Judge"])
-    edges.append(["Chenildieu","Champmathieu"])
-    edges.append(["Chenildieu","Brevet"])
-    edges.append(["Chenildieu","Valjean"])
-    edges.append(["Chenildieu","Bamatabois"])
-    edges.append(["Cochepaille","Judge"])
-    edges.append(["Cochepaille","Champmathieu"])
-    edges.append(["Cochepaille","Brevet"])
-    edges.append(["Cochepaille","Chenildieu"])
-    edges.append(["Cochepaille","Valjean"])
-    edges.append(["Cochepaille","Bamatabois"])
-    edges.append(["Pontmercy","Thenardier"])
-    edges.append(["Boulatruelle","Thenardier"])
-    edges.append(["Eponine","MmeThenardier"])
-    edges.append(["Eponine","Thenardier"])
-    edges.append(["Anzelma","Eponine"])
-    edges.append(["Anzelma","Thenardier"])
-    edges.append(["Anzelma","MmeThenardier"])
-    edges.append(["Woman2","Valjean"])
-    edges.append(["Woman2","Cosette"])
-    edges.append(["Woman2","Javert"])
-    edges.append(["MotherInnocent","Fauchelevent"])
-    edges.append(["MotherInnocent","Valjean"])
-    edges.append(["Gribier","Fauchelevent"])
-    edges.append(["MmeBurgon","Jondrette"])
-    edges.append(["Gavroche","MmeBurgon"])
-    edges.append(["Gavroche","Thenardier"])
-    edges.append(["Gavroche","Javert"])
-    edges.append(["Gavroche","Valjean"])
-    edges.append(["Gillenormand","Cosette"])
-    edges.append(["Gillenormand","Valjean"])
-    edges.append(["Magnon","Gillenormand"])
-    edges.append(["Magnon","MmeThenardier"])
-    edges.append(["MlleGillenormand","Gillenormand"])
-    edges.append(["MlleGillenormand","Cosette"])
-    edges.append(["MlleGillenormand","Valjean"])
-    edges.append(["MmePontmercy","MlleGillenormand"])
-    edges.append(["MmePontmercy","Pontmercy"])
-    edges.append(["MlleVaubois","MlleGillenormand"])
-    edges.append(["LtGillenormand","MlleGillenormand"])
-    edges.append(["LtGillenormand","Gillenormand"])
-    edges.append(["LtGillenormand","Cosette"])
-    edges.append(["Marius","MlleGillenormand"])
-    edges.append(["Marius","Gillenormand"])
-    edges.append(["Marius","Pontmercy"])
-    edges.append(["Marius","LtGillenormand"])
-    edges.append(["Marius","Cosette"])
-    edges.append(["Marius","Valjean"])
-    edges.append(["Marius","Tholomyes"])
-    edges.append(["Marius","Thenardier"])
-    edges.append(["Marius","Eponine"])
-    edges.append(["Marius","Gavroche"])
-    edges.append(["BaronessT","Gillenormand"])
-    edges.append(["BaronessT","Marius"])
-    edges.append(["Mabeuf","Marius"])
-    edges.append(["Mabeuf","Eponine"])
-    edges.append(["Mabeuf","Gavroche"])
-    edges.append(["Enjolras","Marius"])
-    edges.append(["Enjolras","Gavroche"])
-    edges.append(["Enjolras","Javert"])
-    edges.append(["Enjolras","Mabeuf"])
-    edges.append(["Enjolras","Valjean"])
-    edges.append(["Combeferre","Enjolras"])
-    edges.append(["Combeferre","Marius"])
-    edges.append(["Combeferre","Gavroche"])
-    edges.append(["Combeferre","Mabeuf"])
-    edges.append(["Prouvaire","Gavroche"])
-    edges.append(["Prouvaire","Enjolras"])
-    edges.append(["Prouvaire","Combeferre"])
-    edges.append(["Feuilly","Gavroche"])
-    edges.append(["Feuilly","Enjolras"])
-    edges.append(["Feuilly","Prouvaire"])
-    edges.append(["Feuilly","Combeferre"])
-    edges.append(["Feuilly","Mabeuf"])
-    edges.append(["Feuilly","Marius"])
-    edges.append(["Courfeyrac","Marius"])
-    edges.append(["Courfeyrac","Enjolras"])
-    edges.append(["Courfeyrac","Combeferre"])
-    edges.append(["Courfeyrac","Gavroche"])
-    edges.append(["Courfeyrac","Mabeuf"])
-    edges.append(["Courfeyrac","Eponine"])
-    edges.append(["Courfeyrac","Feuilly"])
-    edges.append(["Courfeyrac","Prouvaire"])
-    edges.append(["Bahorel","Combeferre"])
-    edges.append(["Bahorel","Gavroche"])
-    edges.append(["Bahorel","Courfeyrac"])
-    edges.append(["Bahorel","Mabeuf"])
-    edges.append(["Bahorel","Enjolras"])
-    edges.append(["Bahorel","Feuilly"])
-    edges.append(["Bahorel","Prouvaire"])
-    edges.append(["Bahorel","Marius"])
-    edges.append(["Bossuet","Marius"])
-    edges.append(["Bossuet","Courfeyrac"])
-    edges.append(["Bossuet","Gavroche"])
-    edges.append(["Bossuet","Bahorel"])
-    edges.append(["Bossuet","Enjolras"])
-    edges.append(["Bossuet","Feuilly"])
-    edges.append(["Bossuet","Prouvaire"])
-    edges.append(["Bossuet","Combeferre"])
-    edges.append(["Bossuet","Mabeuf"])
-    edges.append(["Bossuet","Valjean"])
-    edges.append(["Joly","Bahorel"])
-    edges.append(["Joly","Bossuet"])
-    edges.append(["Joly","Gavroche"])
-    edges.append(["Joly","Courfeyrac"])
-    edges.append(["Joly","Enjolras"])
-    edges.append(["Joly","Feuilly"])
-    edges.append(["Joly","Prouvaire"])
-    edges.append(["Joly","Combeferre"])
-    edges.append(["Joly","Mabeuf"])
-    edges.append(["Joly","Marius"])
-    edges.append(["Grantaire","Bossuet"])
-    edges.append(["Grantaire","Enjolras"])
-    edges.append(["Grantaire","Combeferre"])
-    edges.append(["Grantaire","Courfeyrac"])
-    edges.append(["Grantaire","Joly"])
-    edges.append(["Grantaire","Gavroche"])
-    edges.append(["Grantaire","Bahorel"])
-    edges.append(["Grantaire","Feuilly"])
-    edges.append(["Grantaire","Prouvaire"])
-    edges.append(["MotherPlutarch","Mabeuf"])
-    edges.append(["Gueulemer","Thenardier"])
-    edges.append(["Gueulemer","Valjean"])
-    edges.append(["Gueulemer","MmeThenardier"])
-    edges.append(["Gueulemer","Javert"])
-    edges.append(["Gueulemer","Gavroche"])
-    edges.append(["Gueulemer","Eponine"])
-    edges.append(["Babet","Thenardier"])
-    edges.append(["Babet","Gueulemer"])
-    edges.append(["Babet","Valjean"])
-    edges.append(["Babet","MmeThenardier"])
-    edges.append(["Babet","Javert"])
-    edges.append(["Babet","Gavroche"])
-    edges.append(["Babet","Eponine"])
-    edges.append(["Claquesous","Thenardier"])
-    edges.append(["Claquesous","Babet"])
-    edges.append(["Claquesous","Gueulemer"])
-    edges.append(["Claquesous","Valjean"])
-    edges.append(["Claquesous","MmeThenardier"])
-    edges.append(["Claquesous","Javert"])
-    edges.append(["Claquesous","Eponine"])
-    edges.append(["Claquesous","Enjolras"])
-    edges.append(["Montparnasse","Javert"])
-    edges.append(["Montparnasse","Babet"])
-    edges.append(["Montparnasse","Gueulemer"])
-    edges.append(["Montparnasse","Claquesous"])
-    edges.append(["Montparnasse","Valjean"])
-    edges.append(["Montparnasse","Gavroche"])
-    edges.append(["Montparnasse","Eponine"])
-    edges.append(["Montparnasse","Thenardier"])
-    edges.append(["Toussaint","Cosette"])
-    edges.append(["Toussaint","Javert"])
-    edges.append(["Toussaint","Valjean"])
-    edges.append(["Child1","Gavroche"])
-    edges.append(["Child2","Gavroche"])
-    edges.append(["Child2","Child1"])
-    edges.append(["Brujon","Babet"])
-    edges.append(["Brujon","Gueulemer"])
-    edges.append(["Brujon","Thenardier"])
-    edges.append(["Brujon","Gavroche"])
-    edges.append(["Brujon","Eponine"])
-    edges.append(["Brujon","Claquesous"])
-    edges.append(["Brujon","Montparnasse"])
-    edges.append(["MmeHucheloup","Bossuet"])
-    edges.append(["MmeHucheloup","Joly"])
-    edges.append(["MmeHucheloup","Grantaire"])
-    edges.append(["MmeHucheloup","Bahorel"])
-    edges.append(["MmeHucheloup","Courfeyrac"])
-    edges.append(["MmeHucheloup","Gavroche"])
-    edges.append(["MmeHucheloup","Enjolras"])
+    with open('./system/data/edges.txt', 'r', encoding='UTF-8') as f:
+        for line in f:
+            edge = []
+            for num in line.split(","):
+                edge.append(num.strip('\n'))
+            edges.append(edge)
+
+
+    nickname = {}
+    with open('./system/data/nickname.txt', 'r', encoding='UTF-8') as f:
+        for line in f:
+            nickname[line.split(",")[0]] = line.split(",")[1].strip("\n")
 
     rejson = []
-    rejson.append({"name":name})
+    rejson.append({"name":nickname[name]})
     dict = {}
     i = 0
     for edge in edges:
         if edge[0] in friends and edge[1] in friends:
-            rejson.append({"source" + str(i): edge[0]})
-            rejson.append({"target" + str(i): edge[1]})
+            rejson.append({"source" + str(i): nickname[edge[0]]})
+            rejson.append({"target" + str(i): nickname[edge[1]]})
             i = i+1
 
             if edge[0] in dict:
@@ -605,180 +338,54 @@ def gn_part(request, name):
             maxspread = key
             maxcount = dict[key]
 
-    rejson.append({"maxspread": maxspread, "maxcount": round(maxcount/totalcount, 2)})
+    rejson.append({"maxspread": nickname[maxspread], "maxcount": round(maxcount/totalcount, 2)})
     # for friend in friends:
     #     rejson.append({"name": friend.to_name})
+    print(dict)
+    for i in range(len(friends)):
+        friends[i] = nickname[friends[i]]
     rejson.append({"friends": friends})
 
+    d_dict = sorted(dict.items(), key=lambda item: item[1], reverse=True)
+    # print(d_dict)
+    dict_relation = {}
+    for id,count in d_dict:
+        if count in dict_relation:
+            dict_relation[count] = dict_relation.get(count) + ',' + nickname[id]
+        else:
+            dict_relation[count] = nickname[id]
 
+    # print(dict_relation)
+
+    rejson.append({"level_num":len(dict_relation),"level":dict_relation})
     print(rejson)
     return HttpResponse(json.dumps(rejson))
+
+
 
 @login_required
 def param_gender(request,name):
     # name = "MmeMagloire"
+    nickname = {}
+    with open('./system/data/nickname.txt', 'r', encoding='UTF-8') as f:
+        for line in f:
+            nickname[line.split(",")[0]] = line.split(",")[1].strip("\n")
+
+
     select = request.GET.get("select", "gender")
     dict = {}
 
     if select == "gender":
         #生成数据集
-        dict["MmeMagloire"] = "man"
-        dict["Geborand"] = "woman"
-        dict["MlleBaptistine"] = "man"
-        dict["Napoleon"] = "woman"
-        dict["Champtercier"] = "man"
-        dict["CountessDeLo"] = "woman"
-        dict["Cravatte"] = "man"
-        dict["Count"] = "woman"
-        dict["Myriel"] = "man"
-        dict["OldMan"] = "woman"
-        dict["Labarre"] = "man"
-        dict["Anzelma"] = "woman"
-        dict["Gillenormand"] = "man"
-        dict["Fauchelevent"] = "woman"
-        dict["Montparnasse"] = "man"
-        dict["MotherInnocent"] = "woman"
-        dict["Javert"] = "man"
-        dict["Woman2"] = "woman"
-        dict["MmeThenardier"] = "man"
-        dict["Simplice"] = "woman"
-        dict["Woman1"] = "man"
-        dict["Thenardier"] = "woman"
-        dict["MlleGillenormand"] = "man"
-        dict["Eponine"] = "woman"
-        dict["Gueulemer"] = "man"
-        dict["Babet"] = "woman"
-        dict["Claquesous"] = "man"
-        dict["Brujon"] = "woman"
-        dict["Marius"] = "man"
-        dict["Cosette"] = "woman"
-        dict["Valjean"] = "man"
-        dict["Zephine"] = "woman"
-        dict["Fantine"] = "man"
-        dict["Tholomyes"] = "woman"
-        dict["Dahlia"] = "man"
-        dict["Fameuil"] = "woman"
-        dict["Listolier"] = "man"
-        dict["Blacheville"] = "woman"
-        dict["Marguerite"] = "man"
-        dict["Favourite"] = "woman"
-        dict["MmeDeR"] = "man"
-        dict["Isabeau"] = "woman"
-        dict["Gervais"] = "man"
-        dict["Chenildieu"] = "woman"
-        dict["Brevet"] = "man"
-        dict["Cochepaille"] = "woman"
-        dict["Bamatabois"] = "man"
-        dict["Champmathieu"] = "woman"
-        dict["Judge"] = "man"
-        dict["Perpetue"] = "woman"
-        dict["Scaufflaire"] = "man"
-        dict["MmePontmercy"] = "woman"
-        dict["Pontmercy"] = "man"
-        dict["Boulatruelle"] = "woman"
-        dict["Gribier"] = "man"
-        dict["Jondrette"] = "woman"
-        dict["Mabeuf"] = "man"
-        dict["MmeBurgon"] = "woman"
-        dict["Combeferre"] = "man"
-        dict["Prouvaire"] = "woman"
-        dict["Joly"] = "man"
-        dict["Grantaire"] = "woman"
-        dict["Feuilly"] = "man"
-        dict["Bahorel"] = "woman"
-        dict["Courfeyrac"] = "man"
-        dict["Gavroche"] = "woman"
-        dict["Bossuet"] = "man"
-        dict["MotherPlutarch"] = "woman"
-        dict["Child1"] = "man"
-        dict["MmeHucheloup"] = "woman"
-        dict["Child2"] = "man"
-        dict["Enjolras"] = "woman"
-        dict["Magnon"] = "man"
-        dict["MlleVaubois"] = "woman"
-        dict["LtGillenormand"] = "man"
-        dict["BaronessT"] = "woman"
-        dict["Toussaint"] = "man"
+        with open('./system/data/gender.txt', 'r', encoding='UTF-8') as f:
+            for line in f:
+                dict[line.split(",")[0]] = line.split(",")[1].strip("\n")
+
     else:
         # 生成数据集
-        dict["MmeMagloire"] = "jiangsu"
-        dict["Geborand"] = "beijing"
-        dict["MlleBaptistine"] = "jiangxi"
-        dict["Napoleon"] = "chengdu"
-        dict["Champtercier"] = "sichuan"
-        dict["CountessDeLo"] = "shanxi"
-        dict["Cravatte"] = "beijing"
-        dict["Count"] = "shandong"
-        dict["Myriel"] = "hunan"
-        dict["OldMan"] = "sichuan"
-        dict["Labarre"] = "chongqing"
-        dict["Anzelma"] = "shanxi"
-        dict["Gillenormand"] = "jiangsu"
-        dict["Fauchelevent"] = "beijing"
-        dict["Montparnasse"] = "jiangxi"
-        dict["MotherInnocent"] = "chengdu"
-        dict["Javert"] = "sichuan"
-        dict["Woman2"] = "shanxi"
-        dict["MmeThenardier"] = "beijing"
-        dict["Simplice"] = "shandong"
-        dict["Woman1"] = "hunan"
-        dict["Thenardier"] = "sichuan"
-        dict["MlleGillenormand"] = "chongqing"
-        dict["Eponine"] = "shanxi"
-        dict["Gueulemer"] = "jiangsu"
-        dict["Babet"] = "beijing"
-        dict["Claquesous"] = "jiangxi"
-        dict["Brujon"] = "chengdu"
-        dict["Marius"] = "sichuan"
-        dict["Cosette"] = "shanxi"
-        dict["Valjean"] = "beijing"
-        dict["Zephine"] = "shandong"
-        dict["Fantine"] = "hunan"
-        dict["Tholomyes"] = "sichuan"
-        dict["Dahlia"] = "chongqing"
-        dict["Fameuil"] = "shanxi"
-        dict["Listolier"] = "jiangsu"
-        dict["Blacheville"] = "beijing"
-        dict["Marguerite"] = "jiangxi"
-        dict["Favourite"] = "chengdu"
-        dict["MmeDeR"] = "sichuan"
-        dict["Isabeau"] = "shanxi"
-        dict["Gervais"] = "beijing"
-        dict["Chenildieu"] = "shandong"
-        dict["Brevet"] = "hunan"
-        dict["Cochepaille"] = "sichuan"
-        dict["Bamatabois"] = "chongqing"
-        dict["Champmathieu"] = "shanxi"
-        dict["Judge"] = "jiangsu"
-        dict["Perpetue"] = "beijing"
-        dict["Scaufflaire"] = "jiangxi"
-        dict["MmePontmercy"] = "chengdu"
-        dict["Pontmercy"] = "sichuan"
-        dict["Boulatruelle"] = "shanxi"
-        dict["Gribier"] = "beijing"
-        dict["Jondrette"] = "shandong"
-        dict["Mabeuf"] = "hunan"
-        dict["MmeBurgon"] = "sichuan"
-        dict["Combeferre"] = "chongqing"
-        dict["Prouvaire"] = "shanxi"
-        dict["Joly"] = "jiangsu"
-        dict["Grantaire"] = "beijing"
-        dict["Feuilly"] = "jiangxi"
-        dict["Bahorel"] = "chengdu"
-        dict["Courfeyrac"] = "sichuan"
-        dict["Gavroche"] = "beijing"
-        dict["Bossuet"] = "shandong"
-        dict["MotherPlutarch"] = "hunan"
-        dict["Child1"] = "sichuan"
-        dict["MmeHucheloup"] = "chongqing"
-        dict["Child2"] = "shanxi"
-        dict["Enjolras"] = "jiangsu"
-        dict["Magnon"] = "beijing"
-        dict["MlleVaubois"] = "jiangxi"
-        dict["LtGillenormand"] = "chengdu"
-        dict["BaronessT"] = "shandong"
-        dict["Toussaint"] = "hunan"
-
+        with open('./system/data/place.txt', 'r', encoding='UTF-8') as f:
+            for line in f:
+                dict[line.split(",")[0]] = line.split(",")[1].strip("\n")
 
     gender = ""
     for key in dict:
@@ -793,260 +400,13 @@ def param_gender(request,name):
     print(node)
 
     edges = []
-    edges.append(["Napoleon", "Myriel"])
-    edges.append(["MlleBaptistine", "Myriel"])
-    edges.append(["MmeMagloire", "Myriel"])
-    edges.append(["MmeMagloire", "MlleBaptistine"])
-    edges.append(["CountessDeLo", "Myriel"])
-    edges.append(["Geborand", "Myriel"])
-    edges.append(["Champtercier", "Myriel"])
-    edges.append(["Cravatte", "Myriel"])
-    edges.append(["Count", "Myriel"])
-    edges.append(["OldMan", "Myriel"])
-    edges.append(["Valjean", "Labarre"])
-    edges.append(["Valjean", "MmeMagloire"])
-    edges.append(["Valjean", "MlleBaptistine"])
-    edges.append(["Valjean", "Myriel"])
-    edges.append(["Marguerite", "Valjean"])
-    edges.append(["MmeDeR", "Valjean"])
-    edges.append(["Isabeau", "Valjean"])
-    edges.append(["Gervais", "Valjean"])
-    edges.append(["Listolier", "Tholomyes"])
-    edges.append(["Fameuil", "Tholomyes"])
-    edges.append(["Fameuil", "Listolier"])
-    edges.append(["Blacheville", "Tholomyes"])
-    edges.append(["Blacheville", "Listolier"])
-    edges.append(["Blacheville", "Fameuil"])
-    edges.append(["Favourite", "Tholomyes"])
-    edges.append(["Favourite", "Listolier"])
-    edges.append(["Favourite", "Fameuil"])
-    edges.append(["Favourite", "Blacheville"])
-    edges.append(["Dahlia", "Tholomyes"])
-    edges.append(["Dahlia", "Listolier"])
-    edges.append(["Dahlia", "Fameuil"])
-    edges.append(["Dahlia", "Blacheville"])
-    edges.append(["Dahlia", "Favourite"])
-    edges.append(["Zephine", "Tholomyes"])
-    edges.append(["Zephine", "Listolier"])
-    edges.append(["Zephine", "Fameuil"])
-    edges.append(["Zephine", "Blacheville"])
-    edges.append(["Zephine", "Favourite"])
-    edges.append(["Zephine", "Dahlia"])
-    edges.append(["Fantine", "Tholomyes"])
-    edges.append(["Fantine", "Listolier"])
-    edges.append(["Fantine", "Fameuil"])
-    edges.append(["Fantine", "Blacheville"])
-    edges.append(["Fantine", "Favourite"])
-    edges.append(["Fantine", "Dahlia"])
-    edges.append(["Fantine", "Zephine"])
-    edges.append(["Fantine", "Marguerite"])
-    edges.append(["Fantine", "Valjean"])
-    edges.append(["MmeThenardier", "Fantine"])
-    edges.append(["MmeThenardier", "Valjean"])
-    edges.append(["Thenardier", "MmeThenardier"])
-    edges.append(["Thenardier", "Fantine"])
-    edges.append(["Thenardier", "Valjean"])
-    edges.append(["Cosette", "MmeThenardier"])
-    edges.append(["Cosette", "Valjean"])
-    edges.append(["Cosette", "Tholomyes"])
-    edges.append(["Cosette", "Thenardier"])
-    edges.append(["Javert", "Valjean"])
-    edges.append(["Javert", "Fantine"])
-    edges.append(["Javert", "Thenardier"])
-    edges.append(["Javert", "MmeThenardier"])
-    edges.append(["Javert", "Cosette"])
-    edges.append(["Fauchelevent", "Valjean"])
-    edges.append(["Fauchelevent", "Javert"])
-    edges.append(["Bamatabois", "Fantine"])
-    edges.append(["Bamatabois", "Javert"])
-    edges.append(["Bamatabois", "Valjean"])
-    edges.append(["Perpetue", "Fantine"])
-    edges.append(["Simplice", "Perpetue"])
-    edges.append(["Simplice", "Valjean"])
-    edges.append(["Simplice", "Fantine"])
-    edges.append(["Simplice", "Javert"])
-    edges.append(["Scaufflaire", "Valjean"])
-    edges.append(["Woman1", "Valjean"])
-    edges.append(["Woman1", "Javert"])
-    edges.append(["Judge", "Valjean"])
-    edges.append(["Judge", "Bamatabois"])
-    edges.append(["Champmathieu", "Valjean"])
-    edges.append(["Champmathieu", "Judge"])
-    edges.append(["Champmathieu", "Bamatabois"])
-    edges.append(["Brevet", "Judge"])
-    edges.append(["Brevet", "Champmathieu"])
-    edges.append(["Brevet", "Valjean"])
-    edges.append(["Brevet", "Bamatabois"])
-    edges.append(["Chenildieu", "Judge"])
-    edges.append(["Chenildieu", "Champmathieu"])
-    edges.append(["Chenildieu", "Brevet"])
-    edges.append(["Chenildieu", "Valjean"])
-    edges.append(["Chenildieu", "Bamatabois"])
-    edges.append(["Cochepaille", "Judge"])
-    edges.append(["Cochepaille", "Champmathieu"])
-    edges.append(["Cochepaille", "Brevet"])
-    edges.append(["Cochepaille", "Chenildieu"])
-    edges.append(["Cochepaille", "Valjean"])
-    edges.append(["Cochepaille", "Bamatabois"])
-    edges.append(["Pontmercy", "Thenardier"])
-    edges.append(["Boulatruelle", "Thenardier"])
-    edges.append(["Eponine", "MmeThenardier"])
-    edges.append(["Eponine", "Thenardier"])
-    edges.append(["Anzelma", "Eponine"])
-    edges.append(["Anzelma", "Thenardier"])
-    edges.append(["Anzelma", "MmeThenardier"])
-    edges.append(["Woman2", "Valjean"])
-    edges.append(["Woman2", "Cosette"])
-    edges.append(["Woman2", "Javert"])
-    edges.append(["MotherInnocent", "Fauchelevent"])
-    edges.append(["MotherInnocent", "Valjean"])
-    edges.append(["Gribier", "Fauchelevent"])
-    edges.append(["MmeBurgon", "Jondrette"])
-    edges.append(["Gavroche", "MmeBurgon"])
-    edges.append(["Gavroche", "Thenardier"])
-    edges.append(["Gavroche", "Javert"])
-    edges.append(["Gavroche", "Valjean"])
-    edges.append(["Gillenormand", "Cosette"])
-    edges.append(["Gillenormand", "Valjean"])
-    edges.append(["Magnon", "Gillenormand"])
-    edges.append(["Magnon", "MmeThenardier"])
-    edges.append(["MlleGillenormand", "Gillenormand"])
-    edges.append(["MlleGillenormand", "Cosette"])
-    edges.append(["MlleGillenormand", "Valjean"])
-    edges.append(["MmePontmercy", "MlleGillenormand"])
-    edges.append(["MmePontmercy", "Pontmercy"])
-    edges.append(["MlleVaubois", "MlleGillenormand"])
-    edges.append(["LtGillenormand", "MlleGillenormand"])
-    edges.append(["LtGillenormand", "Gillenormand"])
-    edges.append(["LtGillenormand", "Cosette"])
-    edges.append(["Marius", "MlleGillenormand"])
-    edges.append(["Marius", "Gillenormand"])
-    edges.append(["Marius", "Pontmercy"])
-    edges.append(["Marius", "LtGillenormand"])
-    edges.append(["Marius", "Cosette"])
-    edges.append(["Marius", "Valjean"])
-    edges.append(["Marius", "Tholomyes"])
-    edges.append(["Marius", "Thenardier"])
-    edges.append(["Marius", "Eponine"])
-    edges.append(["Marius", "Gavroche"])
-    edges.append(["BaronessT", "Gillenormand"])
-    edges.append(["BaronessT", "Marius"])
-    edges.append(["Mabeuf", "Marius"])
-    edges.append(["Mabeuf", "Eponine"])
-    edges.append(["Mabeuf", "Gavroche"])
-    edges.append(["Enjolras", "Marius"])
-    edges.append(["Enjolras", "Gavroche"])
-    edges.append(["Enjolras", "Javert"])
-    edges.append(["Enjolras", "Mabeuf"])
-    edges.append(["Enjolras", "Valjean"])
-    edges.append(["Combeferre", "Enjolras"])
-    edges.append(["Combeferre", "Marius"])
-    edges.append(["Combeferre", "Gavroche"])
-    edges.append(["Combeferre", "Mabeuf"])
-    edges.append(["Prouvaire", "Gavroche"])
-    edges.append(["Prouvaire", "Enjolras"])
-    edges.append(["Prouvaire", "Combeferre"])
-    edges.append(["Feuilly", "Gavroche"])
-    edges.append(["Feuilly", "Enjolras"])
-    edges.append(["Feuilly", "Prouvaire"])
-    edges.append(["Feuilly", "Combeferre"])
-    edges.append(["Feuilly", "Mabeuf"])
-    edges.append(["Feuilly", "Marius"])
-    edges.append(["Courfeyrac", "Marius"])
-    edges.append(["Courfeyrac", "Enjolras"])
-    edges.append(["Courfeyrac", "Combeferre"])
-    edges.append(["Courfeyrac", "Gavroche"])
-    edges.append(["Courfeyrac", "Mabeuf"])
-    edges.append(["Courfeyrac", "Eponine"])
-    edges.append(["Courfeyrac", "Feuilly"])
-    edges.append(["Courfeyrac", "Prouvaire"])
-    edges.append(["Bahorel", "Combeferre"])
-    edges.append(["Bahorel", "Gavroche"])
-    edges.append(["Bahorel", "Courfeyrac"])
-    edges.append(["Bahorel", "Mabeuf"])
-    edges.append(["Bahorel", "Enjolras"])
-    edges.append(["Bahorel", "Feuilly"])
-    edges.append(["Bahorel", "Prouvaire"])
-    edges.append(["Bahorel", "Marius"])
-    edges.append(["Bossuet", "Marius"])
-    edges.append(["Bossuet", "Courfeyrac"])
-    edges.append(["Bossuet", "Gavroche"])
-    edges.append(["Bossuet", "Bahorel"])
-    edges.append(["Bossuet", "Enjolras"])
-    edges.append(["Bossuet", "Feuilly"])
-    edges.append(["Bossuet", "Prouvaire"])
-    edges.append(["Bossuet", "Combeferre"])
-    edges.append(["Bossuet", "Mabeuf"])
-    edges.append(["Bossuet", "Valjean"])
-    edges.append(["Joly", "Bahorel"])
-    edges.append(["Joly", "Bossuet"])
-    edges.append(["Joly", "Gavroche"])
-    edges.append(["Joly", "Courfeyrac"])
-    edges.append(["Joly", "Enjolras"])
-    edges.append(["Joly", "Feuilly"])
-    edges.append(["Joly", "Prouvaire"])
-    edges.append(["Joly", "Combeferre"])
-    edges.append(["Joly", "Mabeuf"])
-    edges.append(["Joly", "Marius"])
-    edges.append(["Grantaire", "Bossuet"])
-    edges.append(["Grantaire", "Enjolras"])
-    edges.append(["Grantaire", "Combeferre"])
-    edges.append(["Grantaire", "Courfeyrac"])
-    edges.append(["Grantaire", "Joly"])
-    edges.append(["Grantaire", "Gavroche"])
-    edges.append(["Grantaire", "Bahorel"])
-    edges.append(["Grantaire", "Feuilly"])
-    edges.append(["Grantaire", "Prouvaire"])
-    edges.append(["MotherPlutarch", "Mabeuf"])
-    edges.append(["Gueulemer", "Thenardier"])
-    edges.append(["Gueulemer", "Valjean"])
-    edges.append(["Gueulemer", "MmeThenardier"])
-    edges.append(["Gueulemer", "Javert"])
-    edges.append(["Gueulemer", "Gavroche"])
-    edges.append(["Gueulemer", "Eponine"])
-    edges.append(["Babet", "Thenardier"])
-    edges.append(["Babet", "Gueulemer"])
-    edges.append(["Babet", "Valjean"])
-    edges.append(["Babet", "MmeThenardier"])
-    edges.append(["Babet", "Javert"])
-    edges.append(["Babet", "Gavroche"])
-    edges.append(["Babet", "Eponine"])
-    edges.append(["Claquesous", "Thenardier"])
-    edges.append(["Claquesous", "Babet"])
-    edges.append(["Claquesous", "Gueulemer"])
-    edges.append(["Claquesous", "Valjean"])
-    edges.append(["Claquesous", "MmeThenardier"])
-    edges.append(["Claquesous", "Javert"])
-    edges.append(["Claquesous", "Eponine"])
-    edges.append(["Claquesous", "Enjolras"])
-    edges.append(["Montparnasse", "Javert"])
-    edges.append(["Montparnasse", "Babet"])
-    edges.append(["Montparnasse", "Gueulemer"])
-    edges.append(["Montparnasse", "Claquesous"])
-    edges.append(["Montparnasse", "Valjean"])
-    edges.append(["Montparnasse", "Gavroche"])
-    edges.append(["Montparnasse", "Eponine"])
-    edges.append(["Montparnasse", "Thenardier"])
-    edges.append(["Toussaint", "Cosette"])
-    edges.append(["Toussaint", "Javert"])
-    edges.append(["Toussaint", "Valjean"])
-    edges.append(["Child1", "Gavroche"])
-    edges.append(["Child2", "Gavroche"])
-    edges.append(["Child2", "Child1"])
-    edges.append(["Brujon", "Babet"])
-    edges.append(["Brujon", "Gueulemer"])
-    edges.append(["Brujon", "Thenardier"])
-    edges.append(["Brujon", "Gavroche"])
-    edges.append(["Brujon", "Eponine"])
-    edges.append(["Brujon", "Claquesous"])
-    edges.append(["Brujon", "Montparnasse"])
-    edges.append(["MmeHucheloup", "Bossuet"])
-    edges.append(["MmeHucheloup", "Joly"])
-    edges.append(["MmeHucheloup", "Grantaire"])
-    edges.append(["MmeHucheloup", "Bahorel"])
-    edges.append(["MmeHucheloup", "Courfeyrac"])
-    edges.append(["MmeHucheloup", "Gavroche"])
-    edges.append(["MmeHucheloup", "Enjolras"])
+    with open('./system/data/edges.txt', 'r', encoding='UTF-8') as f:
+        for line in f:
+            edge = []
+            for num in line.split(","):
+                edge.append(num.strip('\n'))
+            edges.append(edge)
+
 
     useedge = []
     for edge in edges:
@@ -1064,12 +424,21 @@ def param_gender(request,name):
     print(communication , allq , maxq)
 
     rejson = []
+    for i in range(len(communication)):
+        for j in range(len(communication[i])):
+            communication[i][j] = nickname[communication[i][j]]
     rejson.append({"communication": communication})
+
+    for i in range(len(useedge)):
+        for j in range(len(useedge[i])):
+            useedge[i][j] = nickname[useedge[i][j]]
     rejson.append({"edge":useedge})
+
     rejson.append({"maxQ":maxq})
 
     print(rejson)
     return HttpResponse(json.dumps(rejson))
+
 @login_required
 def sin_analysis(request, name):
     user = models.Supversiedpersonlist.objects.all().get(name=name)
