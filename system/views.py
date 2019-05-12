@@ -99,8 +99,10 @@ def relationextraction(request):
 
 @login_required
 def newgn(request):
-
     return render(request, 'newgn.html')
+
+def allgn(request):
+    return render(request,'allgn.html')
 
 @login_required
 def fileUpload(request):
@@ -250,7 +252,7 @@ def all_gn(request):
         for line in f:
             communite = []
             for num in line.split(","):
-                communite.append(nickname[num.strip('\n')])
+                communite.append(nickname[num.strip('\n')]+":"+num.strip('\n'))
             communites.append(communite)
 
     edges = []
@@ -343,7 +345,7 @@ def gn_part(request, name):
     #     rejson.append({"name": friend.to_name})
     print(dict)
     for i in range(len(friends)):
-        friends[i] = nickname[friends[i]]
+        friends[i] = nickname[friends[i]] + ":" + friends[i]
     rejson.append({"friends": friends})
 
     d_dict = sorted(dict.items(), key=lambda item: item[1], reverse=True)

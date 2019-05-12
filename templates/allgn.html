@@ -1,0 +1,238 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns="">
+{% load staticfiles %}
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" href="{% static 'css/main_demo.css' %}">
+<title>天鹰监测系统</title>
+    <style>
+        table thead, tbody tr{
+            display: table;
+            width: 100%;
+            table-layout: fixed;
+        }
+
+        table thead {
+            width: calc(100% - 1em);
+        }
+    </style>
+</head>
+<body>
+<div style="width: 1300px;margin: auto;">
+    <header style="background-color: #547ca5;height: 100px;vertical-align: center;">
+        <img src="/static/img/eagle.jpg" height="100px" width="120px">
+        <h2 style="text-align: center;margin-top: -60px;">天鹰监测系统</h2>
+        <span style="position:relative;float: right;bottom: 30px;right: 20px;">
+        <a href="#" style="color: black;" >{{ user.username }}<span class="caret"></span></a>
+        <span ><a href="{% url 'socialNetworkCode:logout' %}" style="color: black;" >Logout</a></span>
+        </span>
+    </header>
+        <br><br>
+
+    <div  style="float: left;">
+        <div class="navigate" style="background-color: #F9FAFB;">
+            <ul class="">
+                <li><a href="/socialNetworkCode/newgn">监测信息表</a></li>
+                <li><a href="/socialNetworkCode/allgn"  style="background-color:  #ecf5ff"  ><b>用户划分</b></a></li>
+            </ul>
+        </div>
+
+         <br><br>
+
+            <div class="navigate" style="background-color: #F9FAFB;">
+                <ul class="">
+                    <li><a href="javascript:void(0);" ><b>|-全网络关系</b></a></li>
+                    <li id="all_modul" class="param" style="color:#4183C4;font-size: 16px;padding:7px 55px;display: block;width: 100px;">最大模块度</li>
+                    <li id="gn_num" class="param" style="color:#4183C4;font-size: 16px;padding:7px 55px;display: block;width: 100px;">社区数量</li>
+                </ul>
+            </div>
+    </div>
+    <div class="content" style="float: left;margin-left: 20px;height:auto;">
+
+        <h3 style="background-color: rgb(224, 224, 224);padding: 10px 30px;width: 1000px;">全网络人物关系图</h3>
+
+        <div id="main2" style="margin-left: 20px;height:600px;width:900px;"></div>
+
+
+    </div>
+</div>
+
+  <script src="http://echarts.baidu.com/build/dist/echarts.js"></script>
+    <script src="{% static 'js/jquery-2.1.0.js' %}"></script>
+
+{#    <script src="{% static 'js/echarts.js' %}"></script>#}
+
+<script type="text/javascript">
+        // 路径配置
+        require.config({
+            paths: {
+                echarts: 'http://echarts.baidu.com/build/dist'
+            }
+        });
+
+        require(
+            [
+                'echarts',
+                'echarts/chart/force', // 使用柱状图就加载bar模块，按需加载
+                'echarts/chart/bar',
+                'echarts/chart/map',
+            ],
+        function (ec) {
+             var myChart = ec.init(document.getElementById('main2'));
+
+
+            var option = {
+                     title : {
+                    // text: '人物关系：乔布斯',
+                    // subtext: '数据来自人立方',
+                    x:'right',
+                    y:'bottom'
+                },
+                    tooltip : {
+                        trigger: 'item',
+                        formatter: '{a} : {b}'
+                    },
+                    toolbox: {
+                        show : true,
+                        feature : {
+                            restore : {show: true},
+                            magicType: {show: true, type: ['force', 'chord']},
+                            saveAsImage : {show: true}
+                        }
+                    },
+                    legend: {
+                        x: 'left',
+                        data:['c0','c1','c2','c3','c4','c5','c6']
+                    },
+                    series : [
+                        {
+                            type:'force',
+                            name : "人物关系",
+                            ribbonType: false,
+                            categories : [
+                                {
+                                    name: 'c0'
+                                },
+                                {
+                                    name: 'c1'
+                                },
+                                {
+                                    name: 'c2'
+                                },
+                                {
+                                    name: 'c3'
+                                },
+                                {
+                                    name: 'c4'
+                                },
+                                {
+                                    name: 'c5'
+                                },
+                                {
+                                    name: 'c6'
+                                }
+                            ],
+                            itemStyle: {
+                                normal: {
+                                    label: {
+                                        show: true,
+                                        textStyle: {
+                                            color: '#333'
+                                        }
+                                    },
+                                    nodeStyle : {
+                                        brushType : 'both',
+                                        borderColor : 'rgba(255,215,0,0.4)',
+                                        borderWidth : 1
+                                    },
+                                    linkStyle: {
+                                        type: 'curve'
+                                    }
+                                },
+                                emphasis: {
+                                    label: {
+                                        show: false
+                                        // textStyle: null      // 默认使用全局文本样式，详见TEXTSTYLE
+                                    },
+                                    nodeStyle : {
+                                        //r: 30
+                                    },
+                                    linkStyle : {}
+                                }
+                            },
+                            useWorker: false,
+                            minRadius : 15,
+                            maxRadius : 25,
+                            gravity: 1.1,
+                            scaling: 1.1,
+                            roam: 'move',
+                            nodes:[],
+                            links : []
+                        }
+                    ]
+                };
+
+            $.ajax({
+                type:"POST",
+                dataType:"json",
+                url:"{% url 'socialNetworkCode:all_gn' %}",
+                success:function(data){
+                    var len = data.length-1;
+                    var communites = data[len].communites;
+                    for(var i = 0;i<communites.length;i++){
+                        var node = {};
+                        for(var j = 0;j<communites[i].length;j++){
+                            var id = communites[i][j].split(":")[1];
+                            {#//"{% url 'socialNetworkCode:gn' id %}"#}
+                            var u = "/socialNetworkCode/gn/"+id;
+                            node = {category: i, name: communites[i][j].split(":")[0], value: 10,url:u};
+                            option.series[0].nodes.push(node);
+                        }
+                    }
+
+                    var length = data.length-1 ;
+                    var pair = 0;
+                    for(var i = 0;i<length;i++){
+                        var list = {source:data[i]["source"+pair],target:data[++i]["target"+pair],weight:1};
+                        pair++;
+                        option.series[0].links.push(list);
+
+                    }
+
+                    var ecConfig = require('echarts/config');
+
+                    function focus2(param) {
+                        var data = param.data;
+                        var links = option.series[0].links;
+                        var nodes = option.series[0].nodes;
+                        if (
+                            data.source !== undefined
+                            && data.target !== undefined
+                        ) { //点击的是边
+                            var sourceNode = nodes.filter(function (n) {return n.name == data.source})[0];
+                            var targetNode = nodes.filter(function (n) {return n.name == data.target})[0];
+                            console.log("选中了边 " + sourceNode.name + ' -> ' + targetNode.name + ' (' + data.weight + ')');
+                        } else { // 点击的是点
+                            console.log("选中了" + data.name + '(' + data.value + ')');
+                        }
+                        }
+                    myChart.on(ecConfig.EVENT.CLICK, focus2)
+
+                    myChart.on(ecConfig.EVENT.FORCE_LAYOUT_END, function () {
+                        console.log(myChart.chart.force.getPosition());
+                    });
+
+                    // 为echarts对象加载数据
+                    myChart.setOption(option);
+                    myChart.on("click",function(e){
+                       window.open(e.data.url)
+                    });
+
+                    $("#all_modul").html("最大模块度:<br>" + 0.47);
+                    $("#gn_num").html("最优社区数量:<br>20");
+
+                }
+            });
+        });
+</script>
+</body>
+</html>

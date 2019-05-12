@@ -45,9 +45,9 @@
                 <li id="part" class="param" style="color:#4183C4;font-size: 16px;padding:7px 55px;display: block;width: 100px;margin-bottom: 50px;">成分分析</li>
 {#                <li id="gn" class="param" style="color:#4183C4;font-size: 16px;padding:7px 55px;display: block;width: 100px;">社区划分</li>#}
 
-                <li><a href="javascript:void(0);" ><b>|-全网络关系</b></a></li>
-                <li id="all_modul" class="param" style="color:#4183C4;font-size: 16px;padding:7px 55px;display: block;width: 100px;">最大模块度</li>
-                <li id="gn_num" class="param" style="color:#4183C4;font-size: 16px;padding:7px 55px;display: block;width: 100px;">社区数量</li>
+{#                <li><a href="javascript:void(0);" ><b>|-全网络关系</b></a></li>#}
+{#                <li id="all_modul" class="param" style="color:#4183C4;font-size: 16px;padding:7px 55px;display: block;width: 100px;">最大模块度</li>#}
+{#                <li id="gn_num" class="param" style="color:#4183C4;font-size: 16px;padding:7px 55px;display: block;width: 100px;">社区数量</li>#}
 
                 <li style="margin-top: 30px"><a href="javascript:void(0);" ><b>|-参数下关系</b></a></li>
                 <li id="param_modul" class="param" style="color:#4183C4;font-size: 16px;padding:7px 55px;display: block;width: 100px;">最大模块度</li>
@@ -89,9 +89,9 @@
 {#        <em>gn计算</em>#}
 
 
-        <h3 style="background-color: rgb(224, 224, 224);padding: 10px 30px;width: 1000px;">全网络人物关系图</h3>
-
-        <div id="main2" style="margin-left: 20px;height:600px;width:900px;"></div>
+{#        <h3 style="background-color: rgb(224, 224, 224);padding: 10px 30px;width: 1000px;">全网络人物关系图</h3>#}
+{##}
+{#        <div id="main2" style="margin-left: 20px;height:600px;width:900px;"></div>#}
 
         <h3 style="background-color: rgb(224, 224, 224);padding: 10px 30px;width: 1000px;">参数控制人物关系图</h3>
 
@@ -220,10 +220,12 @@
                     var friends = data[length-2].friends;
                     for(var i = 0;i<friends.length;i++){
                         var node = {};
-                        if(friends[i] == data[0].name){
-                            node = {category: 0, name: friends[i], value: 10};
+                        var id = friends[i].split(":")[1];
+                        var u = "/socialNetworkCode/gn/" + id;
+                        if(friends[i].split(":")[0] == data[0].name){
+                            node = {category: 0, name: friends[i].split(":")[0], value: 10,url:u};
                         }else{
-                            node = {category: 1, name: friends[i], value: 5};
+                            node = {category: 1, name: friends[i].split(":")[0], value: 5,url:u};
                         }
                         option1.series[0].nodes.push(node);
                     }
@@ -259,7 +261,9 @@
                     });
                     // 为echarts对象加载数据
                     myChart1.setOption(option1);
-
+                    myChart1.on("click",function(e){
+                       window.open(e.data.url)
+                    });
 
                     var spread = data[data.length-3]["maxspread"];
                     var count = data[data.length-3]["maxcount"];
@@ -363,155 +367,155 @@
             // 基于准备好的dom，初始化echarts图表   MmeMagloire
 
 
-            var myChart = ec.init(document.getElementById('main2'));
-
-
-            var option = {
-                     title : {
-                    // text: '人物关系：乔布斯',
-                    // subtext: '数据来自人立方',
-                    x:'right',
-                    y:'bottom'
-                },
-                    tooltip : {
-                        trigger: 'item',
-                        formatter: '{a} : {b}'
-                    },
-                    toolbox: {
-                        show : true,
-                        feature : {
-                            restore : {show: true},
-                            magicType: {show: true, type: ['force', 'chord']},
-                            saveAsImage : {show: true}
-                        }
-                    },
-                    legend: {
-                        x: 'left',
-                        data:['c0','c1','c2','c3','c4','c5','c6']
-                    },
-                    series : [
-                        {
-                            type:'force',
-                            name : "人物关系",
-                            ribbonType: false,
-                            categories : [
-                                {
-                                    name: 'c0'
-                                },
-                                {
-                                    name: 'c1'
-                                },
-                                {
-                                    name: 'c2'
-                                },
-                                {
-                                    name: 'c3'
-                                },
-                                {
-                                    name: 'c4'
-                                },
-                                {
-                                    name: 'c5'
-                                },
-                                {
-                                    name: 'c6'
-                                }
-                            ],
-                            itemStyle: {
-                                normal: {
-                                    label: {
-                                        show: true,
-                                        textStyle: {
-                                            color: '#333'
-                                        }
-                                    },
-                                    nodeStyle : {
-                                        brushType : 'both',
-                                        borderColor : 'rgba(255,215,0,0.4)',
-                                        borderWidth : 1
-                                    },
-                                    linkStyle: {
-                                        type: 'curve'
-                                    }
-                                },
-                                emphasis: {
-                                    label: {
-                                        show: false
-                                        // textStyle: null      // 默认使用全局文本样式，详见TEXTSTYLE
-                                    },
-                                    nodeStyle : {
-                                        //r: 30
-                                    },
-                                    linkStyle : {}
-                                }
-                            },
-                            useWorker: false,
-                            minRadius : 15,
-                            maxRadius : 25,
-                            gravity: 1.1,
-                            scaling: 1.1,
-                            roam: 'move',
-                            nodes:[],
-                            links : []
-                        }
-                    ]
-                };
-
-            $.ajax({
-                type:"POST",
-                dataType:"json",
-                url:"{% url 'socialNetworkCode:all_gn' %}",
-                success:function(data){
-                    var len = data.length-1;
-                    var communites = data[len].communites;
-                    for(var i = 0;i<communites.length;i++){
-                        var node = {};
-                        for(var j = 0;j<communites[i].length;j++){
-                            node = {category: i, name: communites[i][j], value: 10};
-                            option.series[0].nodes.push(node);
-                        }
-                    }
-
-                    var length = data.length-1 ;
-                    var pair = 0;
-                    for(var i = 0;i<length;i++){
-                        var list = {source:data[i]["source"+pair],target:data[++i]["target"+pair],weight:1};
-                        pair++;
-                        option.series[0].links.push(list);
-
-                    }
-
-                    var ecConfig = require('echarts/config');
-
-                    function focus2(param) {
-                        var data = param.data;
-                        var links = option.series[0].links;
-                        var nodes = option.series[0].nodes;
-                        if (
-                            data.source !== undefined
-                            && data.target !== undefined
-                        ) { //点击的是边
-                            var sourceNode = nodes.filter(function (n) {return n.name == data.source})[0];
-                            var targetNode = nodes.filter(function (n) {return n.name == data.target})[0];
-                            console.log("选中了边 " + sourceNode.name + ' -> ' + targetNode.name + ' (' + data.weight + ')');
-                        } else { // 点击的是点
-                            console.log("选中了" + data.name + '(' + data.value + ')');
-                        }
-                        }
-                    myChart.on(ecConfig.EVENT.CLICK, focus2)
-
-                    myChart.on(ecConfig.EVENT.FORCE_LAYOUT_END, function () {
-                        console.log(myChart.chart.force.getPosition());
-                    });
-
-                    // 为echarts对象加载数据
-                    myChart.setOption(option);
-
-                    $("#all_modul").html("最大模块度:<br>" + 0.47);
-                    $("#gn_num").html("最优社区数量:<br>20");
-
-                }
-            });
+            {#var myChart = ec.init(document.getElementById('main2'));#}
+            {##}
+            {##}
+            {#var option = {#}
+            {#         title : {#}
+            {#        // text: '人物关系：乔布斯',#}
+            {#        // subtext: '数据来自人立方',#}
+            {#        x:'right',#}
+            {#        y:'bottom'#}
+            {#    },#}
+            {#        tooltip : {#}
+            {#            trigger: 'item',#}
+            {#            formatter: '{a} : {b}'#}
+            {#        },#}
+            {#        toolbox: {#}
+            {#            show : true,#}
+            {#            feature : {#}
+            {#                restore : {show: true},#}
+            {#                magicType: {show: true, type: ['force', 'chord']},#}
+            {#                saveAsImage : {show: true}#}
+            {#            }#}
+            {#        },#}
+            {#        legend: {#}
+            {#            x: 'left',#}
+            {#            data:['c0','c1','c2','c3','c4','c5','c6']#}
+            {#        },#}
+            {#        series : [#}
+            {#            {#}
+            {#                type:'force',#}
+            {#                name : "人物关系",#}
+            {#                ribbonType: false,#}
+            {#                categories : [#}
+            {#                    {#}
+            {#                        name: 'c0'#}
+            {#                    },#}
+            {#                    {#}
+            {#                        name: 'c1'#}
+            {#                    },#}
+            {#                    {#}
+            {#                        name: 'c2'#}
+            {#                    },#}
+            {#                    {#}
+            {#                        name: 'c3'#}
+            {#                    },#}
+            {#                    {#}
+            {#                        name: 'c4'#}
+            {#                    },#}
+            {#                    {#}
+            {#                        name: 'c5'#}
+            {#                    },#}
+            {#                    {#}
+            {#                        name: 'c6'#}
+            {#                    }#}
+            {#                ],#}
+            {#                itemStyle: {#}
+            {#                    normal: {#}
+            {#                        label: {#}
+            {#                            show: true,#}
+            {#                            textStyle: {#}
+            {#                                color: '#333'#}
+            {#                            }#}
+            {#                        },#}
+            {#                        nodeStyle : {#}
+            {#                            brushType : 'both',#}
+            {#                            borderColor : 'rgba(255,215,0,0.4)',#}
+            {#                            borderWidth : 1#}
+            {#                        },#}
+            {#                        linkStyle: {#}
+            {#                            type: 'curve'#}
+            {#                        }#}
+            {#                    },#}
+            {#                    emphasis: {#}
+            {#                        label: {#}
+            {#                            show: false#}
+            {#                            // textStyle: null      // 默认使用全局文本样式，详见TEXTSTYLE#}
+            {#                        },#}
+            {#                        nodeStyle : {#}
+            {#                            //r: 30#}
+            {#                        },#}
+            {#                        linkStyle : {}#}
+            {#                    }#}
+            {#                },#}
+            {#                useWorker: false,#}
+            {#                minRadius : 15,#}
+            {#                maxRadius : 25,#}
+            {#                gravity: 1.1,#}
+            {#                scaling: 1.1,#}
+            {#                roam: 'move',#}
+            {#                nodes:[],#}
+            {#                links : []#}
+            {#            }#}
+            {#        ]#}
+            {#    };#}
+            {##}
+            {#$.ajax({#}
+            {#    type:"POST",#}
+            {#    dataType:"json",#}
+            {#    url:"{% url 'socialNetworkCode:all_gn' %}",#}
+            {#    success:function(data){#}
+            {#        var len = data.length-1;#}
+            {#        var communites = data[len].communites;#}
+            {#        for(var i = 0;i<communites.length;i++){#}
+            {#            var node = {};#}
+            {#            for(var j = 0;j<communites[i].length;j++){#}
+            {#                node = {category: i, name: communites[i][j], value: 10};#}
+            {#                option.series[0].nodes.push(node);#}
+            {#            }#}
+            {#        }#}
+            {##}
+            {#        var length = data.length-1 ;#}
+            {#        var pair = 0;#}
+            {#        for(var i = 0;i<length;i++){#}
+            {#            var list = {source:data[i]["source"+pair],target:data[++i]["target"+pair],weight:1};#}
+            {#            pair++;#}
+            {#            option.series[0].links.push(list);#}
+            {##}
+            {#        }#}
+            {##}
+            {#        var ecConfig = require('echarts/config');#}
+            {##}
+            {#        function focus2(param) {#}
+            {#            var data = param.data;#}
+            {#            var links = option.series[0].links;#}
+            {#            var nodes = option.series[0].nodes;#}
+            {#            if (#}
+            {#                data.source !== undefined#}
+            {#                && data.target !== undefined#}
+            {#            ) { //点击的是边#}
+            {#                var sourceNode = nodes.filter(function (n) {return n.name == data.source})[0];#}
+            {#                var targetNode = nodes.filter(function (n) {return n.name == data.target})[0];#}
+            {#                console.log("选中了边 " + sourceNode.name + ' -> ' + targetNode.name + ' (' + data.weight + ')');#}
+            {#            } else { // 点击的是点#}
+            {#                console.log("选中了" + data.name + '(' + data.value + ')');#}
+            {#            }#}
+            {#            }#}
+            {#        myChart.on(ecConfig.EVENT.CLICK, focus2)#}
+            {##}
+            {#        myChart.on(ecConfig.EVENT.FORCE_LAYOUT_END, function () {#}
+            {#            console.log(myChart.chart.force.getPosition());#}
+            {#        });#}
+            {##}
+            {#        // 为echarts对象加载数据#}
+            {#        myChart.setOption(option);#}
+            {##}
+            {#        $("#all_modul").html("最大模块度:<br>" + 0.47);#}
+            {#        $("#gn_num").html("最优社区数量:<br>20");#}
+            {##}
+            {#    }#}
+            {#});#}
 
             //chart2 end
         }

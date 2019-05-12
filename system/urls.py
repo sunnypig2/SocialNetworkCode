@@ -14,6 +14,7 @@ urlpatterns = [
     path('all_analysis/<str:name>', views.all_analysis, name='all_analysis'),
     path('gn/<str:name>', views.gn, name='gn'),
     path('newgn', views.newgn, name='newgn'),
+    path('allgn', views.allgn, name='allgn'),
 
     path('recommendation/<str:name>', views.recommendation, name='recommendation'),
 
