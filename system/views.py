@@ -99,7 +99,28 @@ def relationextraction(request):
 
 @login_required
 def newgn(request):
-    return render(request, 'newgn.html')
+    users = []
+
+    class User:
+        name = "0"
+        nickname = "o"
+        province = ""
+        slogan = ""
+        tag = ""
+
+        def __init__(self,name,nickname,province,slogan,tag):
+            self.name = name
+            self.nickname = nickname
+            self.province = province
+            self.slogan = slogan
+            self.tag = tag
+
+    with open('./system/data/user.txt', 'r', encoding='UTF-8') as f:
+        for line in f:
+            user = User(line.split("$")[0],line.split("$")[1],line.split("$")[2],line.split("$")[3],line.split("$")[4].strip("\n"))
+            users.append(user)
+
+    return render(request, 'newgn.html',{"users":users})
 
 def allgn(request):
     return render(request,'allgn.html')
@@ -159,7 +180,11 @@ def all_analysis(request, name):
 def gn(request,name):
     media = request.GET.get("media", "facebook")
     relation = request.GET.get("relation", "整体")
-    return render(request, 'gn.html', {"name": name})
+    nickname = {}
+    with open('./system/data/nickname.txt', 'r', encoding='UTF-8') as f:
+        for line in f:
+            nickname[line.split(",")[0]] = line.split(",")[1].strip("\n")
+    return render(request, 'gn.html', {"name": name,"nickname":nickname[name]})
 
 # //add
 @login_required
@@ -215,7 +240,7 @@ def recommendation(request, name):
                         dictrory[nickname[s2.split("'")[i]]] = s3
 
     print(dictrory)
-    return render(request, 'recommendation.html', {"name": name,"sim_people": sim_people,"type": name_type,"topic_word":topic_word,"aprior": json.dumps(dictrory)})
+    return render(request, 'recommendation.html', {"name": name,"nickname":nickname[name],"sim_people": sim_people,"type": name_type,"topic_word":topic_word,"aprior": json.dumps(dictrory)})
 
 
 @login_required

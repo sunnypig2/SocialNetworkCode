@@ -49,35 +49,44 @@
                 </thead>
 
                 <tbody style="height: 300px;overflow-y: hidden;overflow:auto ;display: block;">
-                <tr><td ><a href="{% url 'socialNetworkCode:gn'  '1786765390'  %}">是梦宝呀_</a></td>
-                <td>北京</td>
-                <td>2019-自律自强／不造口业</td>
-                <td>舒淇||马思纯||刘涛||朴志效||戚薇||金宥斌</td></tr>
+{#                <tr><td ><a href="{% url 'socialNetworkCode:gn'  '1786765390'  %}">是梦宝呀_</a></td>#}
+{#                <td>北京</td>#}
+{#                <td>2019-自律自强／不造口业</td>#}
+{#                <td>舒淇||马思纯||刘涛||朴志效||戚薇||金宥斌</td></tr>#}
+{##}
+{#                <tr><td ><a href="{% url 'socialNetworkCode:gn'  '2013308075'  %}">鞠然是婧祎啊</a></td>#}
+{#                <td>云南</td>#}
+{#                <td>陪你将风浪踏成红毯</td>#}
+{#                <td>孩子气</td></tr>#}
+{##}
+{#                <tr><td ><a href="{% url 'socialNetworkCode:gn'  '305142'  %}">魏小言-</a></td>#}
+{#                <td>北京</td>#}
+{#                <td>wyuei，发的啥都</td>#}
+{#                <td>黑喵||鞠婧祎</td></tr>#}
+{##}
+{#                <tr><td ><a href="{% url 'socialNetworkCode:gn'  '3439746044'  %}">Arayumi</a></td>#}
+{#                <td>上海</td>#}
+{#                <td>无聊</td>#}
+{#                <td>H豚E厨||工科女||歌姬控||鞠推卡鞠党</td></tr>#}
+{##}
+{#                <tr><td ><a href="{% url 'socialNetworkCode:gn'  '3542512733'  %}">佛系鞠狐</a></td>#}
+{#                <td>北京</td>#}
+{#                <td>鞠婧祎，我愿化身为剑，护你一世周全！</td>#}
+{#                <td></td></tr>#}
+{##}
+{#                <tr><td ><a href="{% url 'socialNetworkCode:gn'  '3740408065'  %}">一只小虫崽</a></td>#}
+{#                <td>上海</td>#}
+{#                <td>爱剪视频却很懒的……小虫配骑</td>#}
+{#                <td>明星偶像||广告||音乐控||设计||视频编辑||视频||剪辑||视频剪辑||名人明星</td></tr>#}
 
-                <tr><td ><a href="{% url 'socialNetworkCode:gn'  '2013308075'  %}">鞠然是婧祎啊</a></td>
-                <td>云南</td>
-                <td>陪你将风浪踏成红毯</td>
-                <td>孩子气</td></tr>
-
-                <tr><td ><a href="{% url 'socialNetworkCode:gn'  '305142'  %}">魏小言-</a></td>
-                <td>北京</td>
-                <td>wyuei，发的啥都</td>
-                <td>黑喵||鞠婧祎</td></tr>
-
-                <tr><td ><a href="{% url 'socialNetworkCode:gn'  '3439746044'  %}">Arayumi</a></td>
-                <td>上海</td>
-                <td>无聊</td>
-                <td>H豚E厨||工科女||歌姬控||鞠推卡鞠党</td></tr>
-
-                <tr><td ><a href="{% url 'socialNetworkCode:gn'  '3542512733'  %}">佛系鞠狐</a></td>
-                <td>北京</td>
-                <td>鞠婧祎，我愿化身为剑，护你一世周全！</td>
-                <td></td></tr>
-
-                <tr><td ><a href="{% url 'socialNetworkCode:gn'  '3740408065'  %}">一只小虫崽</a></td>
-                <td>上海</td>
-                <td>爱剪视频却很懒的……小虫配骑</td>
-                <td>明星偶像||广告||音乐控||设计||视频编辑||视频||剪辑||视频剪辑||名人明星</td></tr>
+                {% for user in users %}
+                <tr>
+                    <td ><a href="{% url 'socialNetworkCode:gn'  user.name  %}">{{ user.nickname }}</a></td>
+                    <td>{{ user.province }}</td>
+                    <td>{{ user.slogan }}</td>
+                    <td>{{ user.tag }}</td>
+                </tr>
+                    {% endfor %}
                 </tbody>
                 </table>
             <h3 style="background-color: rgb(224, 224, 224);padding: 10px 30px;">Topic-Word</h3>
